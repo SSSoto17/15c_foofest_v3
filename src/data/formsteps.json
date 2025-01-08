@@ -1,0 +1,5 @@
+[
+  { "step": 1, "title": "Choose Tickets" },
+  { "step": 2, "title": "Ticket Information" },
+  { "step": 3, "title": "Payment" }
+]

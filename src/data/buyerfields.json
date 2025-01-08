@@ -1,0 +1,12 @@
+[
+  {
+    "name": "name",
+    "type": "text",
+    "placeholder": "e.g. John Doe"
+  },
+  {
+    "name": "email",
+    "type": "email",
+    "placeholder": "johndoe@gmail.com"
+  }
+]

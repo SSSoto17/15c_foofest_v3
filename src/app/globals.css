@@ -1,0 +1,210 @@
+@import "tailwindcss";
+@import "tailwindcss/theme";
+@layer components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme {
+  /* TEXT */
+  --font-display: var(--font-anton);
+
+  /* @link https://utopia.fyi/type/calculator?c=320,16,1.333,1240,18,1.618,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+
+  --text-res-xs: clamp(0.6331rem, 0.6425rem + -0.0125vw, 0.64rem);
+  --text-res-sm: clamp(0.8rem, 0.784rem + 0.0799vw, 0.844rem);
+  --text-res-base: clamp(1rem, 0.9545rem + 0.2273vw, 1.125rem);
+  --text-res-lg: clamp(1.25rem, 1.1592rem + 0.4539vw, 1.4996rem);
+  --text-res-xl: clamp(1.5625rem, 1.4038rem + 0.7936vw, 1.999rem);
+  --text-res-2xl: clamp(1.9531rem, 1.6944rem + 1.2937vw, 2.6647rem);
+  --text-res-3xl: clamp(2.4414rem, 2.0376rem + 2.0193vw, 3.552rem);
+  --text-res-4xl: clamp(3.0518rem, 2.4397rem + 3.0601vw, 4.7348rem);
+  --text-res-5xl: clamp(3.8147rem, 2.9068rem + 4.5397vw, 6.3115rem);
+  --text-res-6xl: clamp(4.7684rem, 3.443rem + 6.627vw, 8.4132rem);
+
+  /* COLOR | PRIMARY */
+  --color-forest-50: #effaf4;
+  --color-forest-100: #d9f2e3;
+  --color-forest-200: #b6e4cc;
+  --color-forest-300: #8ad0af;
+  --color-forest-400: #54b389;
+  --color-forest-500: #32976d;
+  --color-forest-600: #227957;
+  --color-forest-700: #1b6148;
+  --color-forest-800: #184d3a;
+  --color-forest-900: #153f31;
+  --color-forest-950: #0a241c;
+
+  /* COLOR | NEUTRAL */
+  --color-aztec-50: #f5f8f6;
+  --color-aztec-100: #dfe8e3;
+  --color-aztec-200: #bed1c7;
+  --color-aztec-300: #96b2a4;
+  --color-aztec-400: #709182;
+  --color-aztec-500: #567668;
+  --color-aztec-600: #435e53;
+  --color-aztec-700: #384d44;
+  --color-aztec-800: #303f39;
+  --color-aztec-900: #2b3632;
+  --color-aztec-950: #1b2622;
+
+  /* COLOR | ACCENT */
+  --color-gold-50: #fdfae9;
+  --color-gold-100: #faf3c7;
+  --color-gold-200: #f6e492;
+  --color-gold-300: #f1ce53;
+  --color-gold-400: #ebb724;
+  --color-gold-500: #db9f17;
+  --color-gold-600: #bd7b11;
+  --color-gold-700: #975811;
+  --color-gold-800: #7d4716;
+  --color-gold-900: #6b3a18;
+  --color-gold-950: #3e1e0a;
+
+  /* COLOR | SEMANTIC TOKENS */
+  --color-text-global: var(--color-forest-100);
+  --color-text-global--disabled: var(--color-aztec-500);
+  --color-text-global--action: var(--color-forest-300);
+  --color-text-global--error: #ef4444;
+  --color-text-heading: var(--color-forest-300);
+  --color-surface-global: #171e1b;
+  --color-surface-action: var(--color-forest-600);
+  --color-surface-action--disabled: var(--color-aztec-500);
+  --color-border-global: var(--color-aztec-700);
+  --color-border-global--error: #f87171;
+
+  /* COLOR | SEMANTIC TOKENS | FORMS */
+  --color-border-form: var(--color-border-global);
+  --color-text-input: var(--color-text-global);
+  --color-surface-input: color-mix(in oklch, var(--color-aztec-900) 50%, transparent);
+  --color-surface-input--error: color-mix(in oklch, var(--color-aztec-900) 75%, transparent);
+  --color-surface-input--focus: var(--color-aztec-900);
+  --color-border-input: var(--color-aztec-900);
+  --color-border-input--focus: var(--color-aztec-600);
+
+  --color-surface-radio--hover: var(--color-aztec-900);
+  --color-border-radio: var(--color-aztec-600);
+  --color-border-radio--checked: var(--color-forest-600);
+  --color-border-radio--disabled: var(--color-aztec-900);
+
+  /* --bg-svg-diamond: url("../assets/svg/diamond.svg"); */
+}
+
+@layer components {
+  /* TEXT STYLES */
+
+  .heading-title {
+    @apply text-res-6xl leading-tight	 font-display font-normal uppercase;
+  }
+  .heading-1 {
+    @apply text-res-5xl leading-tight	 font-display font-normal;
+  }
+  .heading-2 {
+    @apply text-res-4xl leading-tight	 font-display font-normal;
+  }
+  .heading-3 {
+    @apply text-res-3xl leading-tight	 font-display font-normal;
+  }
+
+  .heading-4 {
+    @apply text-res-xl leading-tight tracking-wide	font-display font-bold uppercase;
+  }
+  .heading-5 {
+    @apply text-res-xl leading-tight font-semibold;
+  }
+
+  .heading-6 {
+    @apply text-res-lg leading-tight font-bold uppercase;
+  }
+
+  .heading-7 {
+    @apply leading-tight font-bold uppercase text-text-heading;
+  }
+  .heading-tagline {
+    @apply text-res-lg leading-tight	 uppercase text-text-heading;
+  }
+
+  .body-copy {
+    @apply text-res-base leading-normal font-normal max-w-prose;
+  }
+
+  .body-copy-small {
+    @apply text-res-sm leading-normal font-normal;
+  }
+
+  /* BASE COMPONENTS */
+
+  .button {
+    @apply w-full max-w-48  cursor-pointer border-2 disabled:cursor-default;
+  }
+
+  /* FORM ELEMENTS */
+  .input-field {
+    @apply flex items-center w-full p-2 border rounded-xs text-text-input bg-surface-input border-border-input;
+  }
+
+  .input-field-text--focus {
+    @apply data-focus:outline-none data-focus:bg-surface-input--focus data-focus:border-border-input--focus;
+  }
+  .input-field-number--focus {
+    @apply has-data-focus:bg-surface-input--focus has-data-focus:border-border-input--focus;
+  }
+
+  .input-radio {
+    @apply block w-4 aspect-square rounded-full group-not-data-disabled:group-hover:bg-surface-radio--hover border-2 border-border-radio group-data-checked:border-6 group-data-checked:border-border-radio--checked group-data-disabled:border-border-radio--disabled;
+  }
+}
+
+body {
+  background: #171e1b;
+  display: grid;
+  grid-template-columns: minmax(1rem, 1fr) minmax(0, 1200px) minmax(1rem, 1fr);
+  grid-template-rows: auto 1fr auto;
+  min-height: 100svh;
+  overflow-x: clip;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+  > * {
+    grid-column: 2;
+  }
+
+  > main {
+    grid-row: 2;
+  }
+}
+
+.full-bleed {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+
+  > :not(&) {
+    grid-column: 2;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide spin buttons in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .flow-space {
+    > * + * {
+      margin-block-start: var(--flow-space, 1em);
+    }
+  }
+}

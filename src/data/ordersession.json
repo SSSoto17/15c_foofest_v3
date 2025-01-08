@@ -1,0 +1,4 @@
+[
+  { "slug": "order-confirmation", "heading": "Wuhuu! You’re ready for FooFest", "text": "You have succesfully purchased tickets for FooFest 2025. We’ll send you an e-mail with the tickets shortly.", "label": "Meanwhile check out the schedule!", "btn": "Lineup 2025", "img": "succes.png" },
+  { "slug": "sessionTimeout", "heading": "Time limit exceeded...", "text": "The time limit makes it fair to all our customers searching for tickets.", "label": "You’re welcome to try again!", "btn": "Try again", "img": "timelimit.png" }
+]
