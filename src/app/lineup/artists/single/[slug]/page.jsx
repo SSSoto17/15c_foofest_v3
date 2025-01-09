@@ -47,9 +47,14 @@ export default async function ArtistSingle({ params }) {
           {artist.logoCredits && <small className="mt-2 inline-block body-copy-small text-aztec-300">Photo by Johan von Bülow</small>}
         </div>
         <article className=" pb-8">
-          <h1 className="heading-tagline px-4 py-2 border-2 inline-block">
+          <h1 className={`relative heading-tagline px-4 py-2 ${!actPlaying.cancelled && "border-2"} inline-block`}>
             {dayPlaying}
             <span className="ml-8">{actPlaying.start}</span>
+            {actPlaying.cancelled && (
+              <span>
+                <p className="absolute left-16 -bottom-2 col-start-1 -rotate-12 text-res-xs sm:text-res-sm uppercase border-2 border-gold-600 text-gold-600 inline-block px-1 sm:px-2 sm:py-0.5">Cancelled</p>
+              </span>
+            )}
           </h1>
           <h2 className="heading-2 my-6">{artist.name}</h2>
           <div className="grid grid-cols-2 pb-8">
