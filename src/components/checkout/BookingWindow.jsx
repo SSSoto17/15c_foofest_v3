@@ -16,7 +16,7 @@ import { useOrderActions } from "@/store/orderStore";
 export default function BookingWindow() {
   const router = useRouter();
 
-  const initState = { activeStep: 1, success: false, errors: {} };
+  const initState = { activeStep: 3, success: false, errors: {} };
   const [state, submit, isPending] = useActionState(submitOrder, initState);
   const { setActiveStep, setReservationId } = useSessionActions();
   const { setOrderData } = useOrderActions();

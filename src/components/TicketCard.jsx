@@ -9,7 +9,7 @@ const TicketCard = ({ type, description, price, variant }) => {
   };
 
   return (
-    <Link href="/booking">
+    <Link href="/session/reservation/flow/checkout">
       <article
         className={`px-8 pt-6 pb-2 h-full bg-aztec-950 ${variants[variant]} bg-no-repeat hover:scale-101 transition-transform	grid grid-cols-1 grid-rows-[1fr_auto_auto] gap-y-4`}
       >

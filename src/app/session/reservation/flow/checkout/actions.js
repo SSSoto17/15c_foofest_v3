@@ -219,9 +219,17 @@ async function submitStepThree(prev, formData) {
   // FORM VALIDATION
   const errors = {};
 
-  // if (!orderData.name) {
-  //   errors.name = "Please enter your name.";
-  // }
+  if (!orderData.name || orderData.name.length <= 1) {
+    errors.name = "Please enter your name.";
+  }
+
+  if (
+    !orderData.email ||
+    !orderData.email.includes("@") ||
+    !orderData.email.includes(".")
+  ) {
+    errors.email = "Please enter your email.";
+  }
 
   if (
     !cardDetails.cardNumber ||
@@ -234,10 +242,7 @@ async function submitStepThree(prev, formData) {
     orderData.paid = true;
   }
 
-  console.log(errors);
-
-  if (errors.cardDetails) {
-    console.log(errors);
+  if (errors.name || errors.email || errors.cardDetails) {
     return {
       activeStep: prev.activeStep,
       success: false,
