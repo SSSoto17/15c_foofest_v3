@@ -30,7 +30,7 @@ export default function BookingStepOne({
 
   return (
     <Form
-      action={submit}
+      onSubmit={submit}
       onKeyDown={keyEnter}
       className="grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12"
     >
@@ -76,7 +76,10 @@ function SelectCampingArea({ data }) {
 }
 
 function GreenFee() {
-  const data = { name: "greenFee", price: 249 };
+  const data = {
+    name: "greenFee",
+    price: 249,
+  };
   return (
     <Fieldset className="grid gap-y-2">
       <CheckField data={data}>Green Fee</CheckField>

@@ -15,7 +15,6 @@ import {
   MdOutlineError,
   MdOutlineCheck,
 } from "react-icons/md";
-import { FaRegQuestionCircle } from "react-icons/fa";
 
 // FUNCTIONS
 import { useState, useEffect } from "react";
@@ -40,9 +39,8 @@ export function QuantitySelector({ data, children }) {
 
 function Spinner({
   name,
-  label,
   error,
-  single,
+  disabled,
   currentTotal,
   setTotal,
   overallTotal,
@@ -59,7 +57,7 @@ function Spinner({
         className={`input-field input-field-number--focus flex justify-between gap-4 w-fit ${
           ((error?.includes("select") && overallTotal < 1) ||
             (error?.includes("limit") && currentTotal > 10) ||
-            error?.tentSetup) &&
+            error) &&
           "not-has-data-focus:border-border-global--error bg-surface-input--focus"
         }`}
       >
@@ -77,17 +75,11 @@ function Spinner({
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
           className="body-copy w-6 text-center data-focus:outline-none data-disabled:text-text-global/15"
-          disabled={label.includes("Triple") && single}
+          // disabled={name.includes("tent") && !display}
         />
         <Button
           aria-label="Increase"
-          disabled={
-            label.includes("Double") && single
-              ? quantity >= 1
-              : label.includes("Triple") && single
-              ? quantity >= 0
-              : quantity >= 10
-          }
+          disabled={disabled}
           className="data-disabled:opacity-25 not-data-disabled:cursor-pointer"
           onClick={() => setQuantity(Number(quantity) + 1)}
         >
@@ -148,16 +140,17 @@ export function RadioSelector({ data, selected, setSelected }) {
 // CHECKBOX
 export function CheckField({ data, minor, children }) {
   const [checked, setChecked] = useState(false);
-
   return (
     <Field className="flex items-center gap-2 md:gap-3 max-w-xl group hover:cursor-pointer">
       <Checkbox
         name={data?.name}
-        checked={checked}
-        onChange={setChecked}
+        checked={data?.state || checked}
+        onChange={data?.onChange || setChecked}
         className="border-2 border-aztec-600 rounded-sm data-checked:border-forest-600 data-checked:bg-forest-600 data-focus:outline-none"
       >
-        <MdOutlineCheck className={`opacity-0 ${checked && "opacity-100"}`} />
+        <MdOutlineCheck
+          className={`opacity-0 ${(data?.state || checked) && "opacity-100"}`}
+        />
       </Checkbox>
       <Label
         className={`body-copy text-res-sm md:text-res-base flex justify-between group-data-disabled:opacity-25 group-not-data-disabled:cursor-pointer ${
@@ -171,6 +164,43 @@ export function CheckField({ data, minor, children }) {
           </span>
         )}
       </Label>
+    </Field>
+  );
+}
+
+// CUSTOMER FIELD
+export function CustomerField({
+  name,
+  defaultValue,
+  placeholder,
+  error,
+  errorIcon,
+  errorText,
+  children,
+}) {
+  const errorStyle =
+    "not-data-focus:border-border-global--error bg-surface-input--focus";
+  return (
+    <Field className="grid gap-y-2">
+      <Label className="body-copy">{children}</Label>
+      <div className={errorIcon && "grid grid-cols-[6fr_1fr] gap-x-4"}>
+        <Input
+          name={name}
+          placeholder={placeholder}
+          defaultValue={defaultValue}
+          className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
+            error && errorStyle
+          }`}
+        />
+        {error && errorIcon && (
+          <MdOutlineError
+            aria-label="Attention!"
+            className="mr-4 place-self-center text-text-global--error"
+            size="24"
+          />
+        )}
+      </div>
+      {error && errorText && <ErrorText>{error}</ErrorText>}
     </Field>
   );
 }

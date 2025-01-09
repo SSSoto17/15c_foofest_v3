@@ -12,15 +12,20 @@ export default function Accordion({ label, variant, name, children }) {
       className="group border-2 border-border-global px-4 py-6 md:p-6"
     >
       <summary
-        className={`cursor-pointer list-none flex items-center gap-4 ${variants[variant]}`}
+        className={`cursor-pointer flex items-center justify-between gap-4 ${variants[variant]}`}
       >
-        <MdAdd
-          size="2rem"
-          className={`duration-300 ease-in-out group-open:rotate-45 ${
-            variant === "primary" && "order-2"
-          }`}
-        />
-        {label}
+        <div className="flex items-center">
+          <MdAdd
+            size="2rem"
+            className={`duration-300 ease-in-out group-open:rotate-45 ${
+              variant === "primary" && "order-2"
+            }`}
+          />
+          {label}
+        </div>
+        <span className="body-copy-small font-bold uppercase opacity-50 justify-self-end mx-8">
+          Optional
+        </span>
       </summary>
       {children}
     </details>
