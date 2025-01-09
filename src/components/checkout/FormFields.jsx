@@ -64,6 +64,7 @@ function Spinner({
         }`}
       >
         <Button
+          aria-label="Decrease"
           disabled={!quantity}
           className="data-disabled:opacity-25 not-data-disabled:cursor-pointer"
           onClick={() => setQuantity(Number(quantity) - 1)}
@@ -79,6 +80,7 @@ function Spinner({
           disabled={label.includes("Triple") && single}
         />
         <Button
+          aria-label="Increase"
           disabled={
             label.includes("Double") && single
               ? quantity >= 1
@@ -94,8 +96,8 @@ function Spinner({
       </div>
       {quantity > 0 && (
         <Button
+          aria-label="Clear"
           className="cursor-pointer"
-          aria-label="Clear quantity"
           onClick={() => setQuantity(0)}
         >
           <MdOutlineDelete
@@ -133,7 +135,7 @@ export function RadioSelector({ data, selected, setSelected }) {
             <Label className="body-copy group-data-disabled:opacity-25 group-not-data-disabled:cursor-pointer">
               {option.label}
             </Label>
-            <small className="body-copy-small opacity-25 cursor-default justify-self-end">
+            <small className="body-copy-small opacity-50 cursor-default justify-self-end">
               {option.details}
             </small>
           </Radio>
