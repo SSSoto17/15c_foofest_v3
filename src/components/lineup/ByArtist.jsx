@@ -18,13 +18,11 @@ const ByArtist = ({ artists }) => {
     }
     return 0;
   });
-  console.log("ARTIST:", artistsSortedByName);
 
   return (
     <section>
       <ul className="grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-4">
         {artistsSortedByName.map((artist, i) => (
-          // console.log("ARTIST:", artist.slug)
           <ArtistCard key={i} name={artist.name} slug={artist.slug} img={artist.logo.startsWith("https://") ? artist.logo : `${endpoint}/logos/${artist.logo}`}></ArtistCard>
         ))}
       </ul>

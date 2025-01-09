@@ -15,9 +15,9 @@ const DaySchedule = ({ jotun, mid, vana }) => {
         ))}
       </ul>
       <ul className="col-start-2 col-span-full row-span-full grid grid-cols-subgrid grid-rows-subgrid">
-        <ColSchedule data={jotun}></ColSchedule>
-        <ColSchedule data={mid}></ColSchedule>
-        <ColSchedule data={vana}></ColSchedule>
+        <ColSchedule acts={jotun}></ColSchedule>
+        <ColSchedule acts={mid}></ColSchedule>
+        <ColSchedule acts={vana}></ColSchedule>
       </ul>
     </section>
   );

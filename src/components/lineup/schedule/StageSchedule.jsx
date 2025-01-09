@@ -3,9 +3,8 @@ import HeaderSchedule from "./HeaderSchedule";
 import TableCell from "./TableCell";
 
 const StageSchedule = ({ data }) => {
-  console.log("Schedule DATA", data);
+  // console.log("Schedule DATA", data);
 
-  const dataArr = Object.values(data); //Laver objektet om til et array
   const thu = data.thu;
   const fri = data.fri;
   const sat = data.sat;
@@ -21,9 +20,9 @@ const StageSchedule = ({ data }) => {
         ))}
       </ul>
       <ul className="col-start-2 col-span-full row-span-full grid grid-cols-subgrid grid-rows-subgrid">
-        <ColSchedule data={thu}></ColSchedule>
-        <ColSchedule data={fri}></ColSchedule>
-        <ColSchedule data={sat}></ColSchedule>
+        <ColSchedule acts={thu}></ColSchedule>
+        <ColSchedule acts={fri}></ColSchedule>
+        <ColSchedule acts={sat}></ColSchedule>
       </ul>
     </section>
   );
