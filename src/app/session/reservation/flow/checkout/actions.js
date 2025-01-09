@@ -102,7 +102,6 @@ async function submitStepTwo(prev, formData) {
   // IS BUYER GUEST?
   const customerData = {};
   const isBuyer = Boolean(formData.get("isBuyer"));
-  console.log(isBuyer);
 
   // COLLECT GUEST DATA
   let guests = [];
@@ -150,20 +149,18 @@ async function submitStepTwo(prev, formData) {
     tent_triple: formData.get("tentTriple"),
   };
 
-  console.log(orderData);
-
   // FORM VALIDATION
   const errors = {};
 
   guests.map(({ name, email }) => {
-    if (!name || name.length > 2) {
+    if (!name || name.length < 2) {
       errors.guests = {
         name: "Please provide the name of each guest.",
       };
     }
 
     if (isBuyer) {
-      if (!name || name.length > 2) {
+      if (!name || name.length < 2) {
         errors.guests = {
           name: "Please provide your name and email.",
         };
@@ -179,10 +176,14 @@ async function submitStepTwo(prev, formData) {
 
   if (guests.length > 1 && tentSpaces.total) {
     if (guests.length < tentSpaces.total) {
-      errors.tentSetup = "Please fill up all available tent space.";
+      errors.tentSetup = `Please fill up all available tent space. ${
+        tentSpaces.total - guests.length
+      } spaces left to fill.`;
     }
     if (guests.length > tentSpaces.total) {
-      errors.tentSetup = "Please ensure room for all guests.";
+      errors.tentSetup = `Please ensure room for all guests. Missing space for ${
+        guests.length - tentSpaces.total
+      } guests.`;
     }
   }
 
@@ -191,8 +192,9 @@ async function submitStepTwo(prev, formData) {
       activeStep: prev.activeStep,
       success: false,
       errors,
-      orderData: prev.orderData,
+      orderData,
       tickets: { ...prev.tickets, data: guests },
+      isBuyer,
     };
   }
 

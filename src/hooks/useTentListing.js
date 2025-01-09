@@ -3,8 +3,7 @@ import { useTents } from "@/store/TentStore";
 import { useTentActions } from "@/store/TentStore";
 
 export default function useTentListing(error) {
-  const { doubleTents, doubleTentSpaces, tripleTents, tripleTentSpaces } =
-    useTents();
+  const { doubleTents, tripleTents } = useTents();
   const { setDouble, setTriple } = useTentActions();
   const totalTickets = getTotalQuantity("tickets");
   const { totalTentSpaces } = getTotalQuantity("tents");
@@ -15,7 +14,11 @@ export default function useTentListing(error) {
       label: "Double Person Tent",
       price: "299",
       error: error?.tentSetup,
-      single: totalTickets === 1,
+      disabled:
+        totalTickets === 1
+          ? totalTentSpaces === 2
+          : (totalTickets - totalTentSpaces) / 2 < 1,
+      display: totalTickets !== 3,
       currentTotal: doubleTents,
       setTotal: setDouble,
       overallTotal: totalTentSpaces,
@@ -25,7 +28,8 @@ export default function useTentListing(error) {
       label: "Triple Person Tent",
       price: "399",
       error: error?.tentSetup,
-      single: totalTickets === 1,
+      disabled: (totalTickets - totalTentSpaces) / 3 < 1,
+      display: totalTickets >= 3,
       currentTotal: tripleTents,
       setTotal: setTriple,
       overallTotal: totalTentSpaces,

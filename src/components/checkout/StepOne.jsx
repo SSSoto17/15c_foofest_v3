@@ -17,12 +17,10 @@ import { getCampingAreas } from "@/lib/order";
 import { keyEnter } from "@/lib/utils";
 import useTicketListing from "@/hooks/useTicketListing";
 import useAvailableArea from "@/hooks/useAvailableArea";
-import { useState } from "react";
 
 export default function BookingStepOne({
   activeStep,
   errors,
-  orderData,
   submit,
   isPending,
 }) {
@@ -32,13 +30,13 @@ export default function BookingStepOne({
 
   return (
     <Form
-      action={submit}
+      onSubmit={submit}
       onKeyDown={keyEnter}
       className="grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12"
     >
       <SelectTickets error={errors} />
       <SelectCampingArea data={areas} />
-      <GreenFee {...orderData} />
+      <GreenFee />
       <FormFooter activeStep={activeStep} isPending={isPending} />
     </Form>
   );
@@ -77,11 +75,10 @@ function SelectCampingArea({ data }) {
   );
 }
 
-function GreenFee({ green_fee }) {
+function GreenFee() {
   const data = {
     name: "greenFee",
     price: 249,
-    checked: green_fee,
   };
   return (
     <Fieldset className="grid gap-y-2">

@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Fieldset, Legend } from "@headlessui/react";
 import {
   QuantitySelector,
-  TextInput,
   CheckField,
   ErrorText,
   CustomerField,
@@ -14,6 +13,7 @@ import {
 import Accordion from "../Accordion";
 import { FormFooter } from "@/app/session/reservation/flow/checkout/page";
 import { keyEnter } from "@/lib/utils";
+import { useState } from "react";
 
 import vipStamp from "@/assets/svg/vip.svg";
 import useTentListing from "@/hooks/useTentListing";
@@ -27,7 +27,7 @@ export default function BookingStepTwo({
 }) {
   return (
     <Form
-      action={submit}
+      onSubmit={submit}
       onKeyDown={keyEnter}
       className="grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12"
     >
@@ -72,8 +72,12 @@ function TicketGuestCard({
   single,
   error,
 }) {
-  const checkboxData = { name: "isBuyer" };
-  const isOptional = false;
+  const [isBuyer, setIsBuyer] = useState(false);
+  const checkboxData = {
+    name: "isBuyer",
+    state: isBuyer,
+    onChange: setIsBuyer,
+  };
   return (
     <>
       <Fieldset className="grid gap-y-6 max-w-md grow shrink">
@@ -104,6 +108,7 @@ function TicketGuestCard({
           <CustomerField
             name={keyEmail}
             error={
+              isBuyer &&
               error?.email &&
               (!data?.email?.includes("@") || !data?.email?.includes("."))
                 ? error?.email
@@ -112,7 +117,7 @@ function TicketGuestCard({
             defaultValue={data?.email}
           >
             Email{" "}
-            {isOptional && (
+            {!isBuyer && (
               <span className="body-copy-small opacity-75">(Optional)</span>
             )}
           </CustomerField>
@@ -134,13 +139,15 @@ function SelectTents({ error }) {
     <Accordion label="Tent Setup" variant="secondary">
       <Fieldset className="grid gap-y-3 ml-12">
         <ErrorText>{error?.tentSetup}</ErrorText>
-        {tentListing.map((tent, id) => {
-          return (
-            <QuantitySelector key={id} data={tent}>
-              {tent.label}
-            </QuantitySelector>
-          );
-        })}
+        {tentListing
+          .filter((tent) => tent.display === true)
+          .map((tent, id) => {
+            return (
+              <QuantitySelector key={id} data={tent}>
+                {tent.label}
+              </QuantitySelector>
+            );
+          })}
       </Fieldset>
     </Accordion>
   );
