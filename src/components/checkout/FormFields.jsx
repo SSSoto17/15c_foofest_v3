@@ -145,14 +145,13 @@ export function RadioSelector({ data, selected, setSelected }) {
 
 // CHECKBOX
 export function CheckField({ data, minor, children }) {
-  const [checked, setChecked] = useState(false);
-
+  const [checked, setChecked] = useState(data.checked);
   return (
     <Field className="flex items-center gap-2 md:gap-3 max-w-xl group hover:cursor-pointer">
       <Checkbox
         name={data?.name}
         checked={checked}
-        onChange={setChecked}
+        onChange={() => setChecked(!checked)}
         className="border-2 border-aztec-600 rounded-sm data-checked:border-forest-600 data-checked:bg-forest-600 data-focus:outline-none"
       >
         <MdOutlineCheck className={`opacity-0 ${checked && "opacity-100"}`} />
@@ -169,6 +168,43 @@ export function CheckField({ data, minor, children }) {
           </span>
         )}
       </Label>
+    </Field>
+  );
+}
+
+// CUSTOMER FIELD
+export function CustomerField({
+  name,
+  defaultValue,
+  placeholder,
+  error,
+  errorIcon,
+  errorText,
+  children,
+}) {
+  const errorStyle =
+    "not-data-focus:border-border-global--error bg-surface-input--focus";
+  return (
+    <Field className="grid gap-y-2">
+      <Label className="body-copy">{children}</Label>
+      <div className={errorIcon && "grid grid-cols-[6fr_1fr] gap-x-4"}>
+        <Input
+          name={name}
+          placeholder={placeholder}
+          defaultValue={defaultValue}
+          className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
+            error && errorStyle
+          }`}
+        />
+        {error && errorIcon && (
+          <MdOutlineError
+            aria-label="Attention!"
+            className="mr-4 place-self-center text-text-global--error"
+            size="24"
+          />
+        )}
+      </div>
+      {error && errorText && <ErrorText>{error}</ErrorText>}
     </Field>
   );
 }

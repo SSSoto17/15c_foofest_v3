@@ -9,6 +9,7 @@ import {
   TextInput,
   CheckField,
   ErrorText,
+  CustomerField,
 } from "@/components/checkout/FormFields";
 import Accordion from "../Accordion";
 import { FormFooter } from "@/app/session/reservation/flow/checkout/page";
@@ -44,6 +45,7 @@ function EnterGuestData({ keys, data, error }) {
     >
       <header className="col-span-full grid gap-2">
         <h2 className="heading-5">Ticket Information</h2>
+        <ErrorText>{error?.name || error?.email}</ErrorText>
       </header>
       {keys.map((key, id) => {
         return (
@@ -71,6 +73,7 @@ function TicketGuestCard({
   error,
 }) {
   const checkboxData = { name: "isBuyer" };
+  const isOptional = false;
   return (
     <>
       <Fieldset className="grid gap-y-6 max-w-md grow shrink">
@@ -91,24 +94,28 @@ function TicketGuestCard({
               className="absolute right-6 -top-6"
             />
           )}
-          <TextInput
+          <CustomerField
             name={keyName}
-            error={error?.name && !data?.name ? error?.name : null}
+            error={error?.name && data?.name?.length < 2 ? error?.name : null}
             defaultValue={data?.name}
-            type="text"
-            variant="slim"
           >
             Name
-          </TextInput>
-          <TextInput
+          </CustomerField>
+          <CustomerField
             name={keyEmail}
-            error={error?.email && !data?.email ? error?.email : null}
+            error={
+              error?.email &&
+              (!data?.email?.includes("@") || !data?.email?.includes("."))
+                ? error?.email
+                : null
+            }
             defaultValue={data?.email}
-            type="email"
-            variant="slim"
           >
-            Email
-          </TextInput>
+            Email{" "}
+            {isOptional && (
+              <span className="body-copy-small opacity-75">(Optional)</span>
+            )}
+          </CustomerField>
         </div>
         {single && (
           <CheckField data={checkboxData} minor>

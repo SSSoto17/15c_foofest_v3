@@ -53,9 +53,13 @@ async function submitStepOne(prev, formData) {
 
   // PREPARE RESERVATION
   const reservationData = {};
+  const orderData = {};
 
   reservationData.area = formData.get("area");
   reservationData.amount = partoutQuantity + vipQuantity;
+
+  orderData.camping_area = reservationData.area;
+  orderData.green_fee = Boolean(formData.get("greenFee"));
 
   // FORM VALIDATION
   const errors = {};
@@ -69,16 +73,12 @@ async function submitStepOne(prev, formData) {
   }
 
   if (errors.tooFewTickets || errors.tooManyTickets) {
-    return { activeStep: prev.activeStep, success: false, errors };
+    return { activeStep: prev.activeStep, success: false, errors, orderData };
   }
 
   // PUT RESERVATION
   const response = await putReservation(reservationData);
   if (response) {
-    const orderData = {};
-
-    orderData.camping_area = reservationData.area;
-    orderData.green_fee = Boolean(formData.get("greenFee"));
     orderData.reservation_id = response.id;
     orderData.paid = false;
 
@@ -101,7 +101,8 @@ async function submitStepTwo(prev, formData) {
   const reservationId = prev.orderData.reservation_id;
   // IS BUYER GUEST?
   const customerData = {};
-  const isBuyer = formData.get("isBuyer");
+  const isBuyer = Boolean(formData.get("isBuyer"));
+  console.log(isBuyer);
 
   // COLLECT GUEST DATA
   let guests = [];
@@ -149,21 +150,30 @@ async function submitStepTwo(prev, formData) {
     tent_triple: formData.get("tentTriple"),
   };
 
+  console.log(orderData);
+
   // FORM VALIDATION
   const errors = {};
 
   guests.map(({ name, email }) => {
-    if (!name || name.length <= 1) {
+    if (!name || name.length > 2) {
       errors.guests = {
-        ...errors.guests,
         name: "Please provide the name of each guest.",
       };
     }
-    if (!email || !email.includes(".")) {
-      errors.guests = {
-        ...errors.guests,
-        email: "Please provide the email of each guest.",
-      };
+
+    if (isBuyer) {
+      if (!name || name.length > 2) {
+        errors.guests = {
+          name: "Please provide your name and email.",
+        };
+      }
+      if (!email || !email.includes("@") || !email.includes(".")) {
+        errors.guests = {
+          ...errors.guests,
+          email: "Please provide your name and email.",
+        };
+      }
     }
   });
 

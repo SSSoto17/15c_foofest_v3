@@ -21,19 +21,19 @@ export default function BookingWindow() {
   const { setActiveStep, setReservationId } = useSessionActions();
   const { setOrderData } = useOrderActions();
 
+  console.log(state?.orderData);
+
   useEffect(() => {
     setActiveStep(state?.activeStep);
     setOrderData(state?.orderData);
-
     if (state?.activeStep === 2) {
       setReservationId(state?.orderData?.reservationId);
     }
-
-    if (state?.success) {
-      router.push("/session/reservation/success");
-    }
   }, [state]);
 
+  if (state?.success) {
+    router.push("/session/reservation/success");
+  }
   return (
     <section className="grid md:grid-rows-subgrid md:col-span-3 md:row-span-full border border-border-form">
       <FormHeader activeStep={state?.activeStep} />

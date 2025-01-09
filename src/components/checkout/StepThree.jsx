@@ -5,7 +5,7 @@ import Form from "next/form";
 import { FormFooter } from "@/app/session/reservation/flow/checkout/page";
 import { keyEnter } from "@/lib/utils";
 import { Field, Fieldset, Label, Legend, Input } from "@headlessui/react";
-import { TextInput, ErrorText } from "./FormFields";
+import { TextInput, CustomerField, ErrorText } from "./FormFields";
 
 export default function BookingStepThree({
   submit,
@@ -20,7 +20,7 @@ export default function BookingStepThree({
       onKeyDown={keyEnter}
       className="grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12"
     >
-      <EnterCustomerData {...orderData} error={errors} />
+      {!orderData?.name && <EnterCustomerData {...orderData} error={errors} />}
       <EnterPaymentInfo {...orderData} error={errors?.cardDetails} />
       <FormFooter activeStep={activeStep} isPending={isPending} />
     </Form>
@@ -36,7 +36,8 @@ function EnterCustomerData({ name, email, error }) {
         defaultValue={name}
         placeholder="e.g. John Doe"
         error={error?.name}
-        withErrorText
+        errorIcon
+        errorText
       >
         Name
       </CustomerField>
@@ -45,7 +46,8 @@ function EnterCustomerData({ name, email, error }) {
         defaultValue={email}
         placeholder="johndoe@gmail.com"
         error={error?.email}
-        withErrorText
+        errorIcon
+        errorText
       >
         Email
       </CustomerField>
@@ -53,72 +55,19 @@ function EnterCustomerData({ name, email, error }) {
   );
 }
 
-import {
-  MdOutlineAdd,
-  MdOutlineRemove,
-  MdOutlineDelete,
-  MdOutlineError,
-  MdOutlineCheck,
-} from "react-icons/md";
-
-function CustomerField({
-  name,
-  defaultValue,
-  placeholder,
-  error,
-  withErrorText,
-  children,
-}) {
-  const errorStyle =
-    "not-data-focus:border-border-global--error bg-surface-input--focus";
-  return (
-    <Field className="grid gap-y-2 max-w-sm">
-      <Label className="body-copy">{children}</Label>
-      <div className="grid grid-cols-[6fr_1fr] gap-x-4">
-        <Input
-          name={name}
-          placeholder={placeholder}
-          defaultValue={defaultValue}
-          className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
-            error && errorStyle
-          }`}
-        />
-        {error && (
-          <MdOutlineError
-            aria-label="Attention!"
-            className="mr-4 place-self-center text-text-global--error"
-            size="24"
-          />
-        )}
-      </div>
-      {error && withErrorText && <ErrorText>{error}</ErrorText>}
-    </Field>
-  );
-}
-
+import { MdOutlineError } from "react-icons/md";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
 function EnterPaymentInfo({ error }) {
   const errorStyle =
     "not-data-focus:border-border-global--error bg-surface-input--focus";
-  const paymentKeys = [
-    {
-      name: "cardNumber",
-      placeholder: "Card number",
-      gridCols: "col-span-full",
-    },
-    {
-      name: "cardExp",
-      placeholder: "Expiration date ( MM / YY )",
-      gridCols: "col-span-2",
-    },
-  ];
   return (
     <Fieldset className="grid gap-y-6">
       <Legend className="heading-5">Payment</Legend>
       {error && <ErrorText>{error}</ErrorText>}
       <div className="grid grid-cols-[6fr_1fr] gap-x-2 gap-y-4 max-w-lg">
         <Field className="grid gap-y-2">
+          <Label>Card Number</Label>
           <Input
             name="cardNumber"
             placeholder="Card number"
