@@ -66,7 +66,7 @@
 
   /* COLOR | SEMANTIC TOKENS */
   --color-text-global: var(--color-forest-100);
-  --color-text-global--disabled: var(--color-aztec-500);
+  --color-text-global--disabled: var(--color-aztec-400);
   --color-text-global--action: var(--color-forest-300);
   --color-text-global--error: #ef4444;
   --color-text-heading: var(--color-forest-300);
@@ -79,8 +79,16 @@
   /* COLOR | SEMANTIC TOKENS | FORMS */
   --color-border-form: var(--color-border-global);
   --color-text-input: var(--color-text-global);
-  --color-surface-input: color-mix(in oklch, var(--color-aztec-900) 50%, transparent);
-  --color-surface-input--error: color-mix(in oklch, var(--color-aztec-900) 75%, transparent);
+  --color-surface-input: color-mix(
+    in oklch,
+    var(--color-aztec-900) 50%,
+    transparent
+  );
+  --color-surface-input--error: color-mix(
+    in oklch,
+    var(--color-aztec-900) 75%,
+    transparent
+  );
   --color-surface-input--focus: var(--color-aztec-900);
   --color-border-input: var(--color-aztec-900);
   --color-border-input--focus: var(--color-aztec-600);
@@ -165,7 +173,8 @@ body {
   grid-template-rows: auto 1fr auto;
   min-height: 100svh;
   overflow-x: clip;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 
   > * {
     grid-column: 2;
