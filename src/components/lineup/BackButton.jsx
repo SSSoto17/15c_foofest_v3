@@ -7,13 +7,11 @@ const BackButton = () => {
   const router = useRouter();
 
   return (
-    <Button onClick={() => router.back()}>
-      <p className="flex gap-4 items-center mb-4 text-aztec-300">
-        <span className="">
-          <MdOutlineArrowBack />
-        </span>
-        Back
-      </p>
+    <Button onClick={() => router.back()} className="cursor-pointer hover:text-aztec-200 flex gap-4 items-center mb-4 text-aztec-300">
+      <span className="">
+        <MdOutlineArrowBack />
+      </span>
+      Back
     </Button>
   );
 };
