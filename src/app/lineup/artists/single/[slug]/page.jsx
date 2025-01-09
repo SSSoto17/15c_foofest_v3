@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MdOutlineArrowBack } from "react-icons/md";
 import { getArtistBySlug, getStages } from "@/lib/lineup";
 
 import picture from "@/assets/tester/terminalist.jpg";
+import BackButton from "@/components/lineup/BackButton";
 const endpoint = process.env.NEXT_PUBLIC_FOO_FEST_API_URL;
 
 export default async function ArtistSingle({ params }) {
@@ -32,14 +32,7 @@ export default async function ArtistSingle({ params }) {
 
   return (
     <main className="my-8">
-      <Link href="/lineup/artists">
-        <p className="flex gap-4 items-center mb-4 text-aztec-300">
-          <span className="">
-            <MdOutlineArrowBack />
-          </span>
-          Back
-        </p>
-      </Link>
+      <BackButton></BackButton>
 
       <section className="grid md:grid-cols-2 gap-10">
         <div>
@@ -65,8 +58,8 @@ export default async function ArtistSingle({ params }) {
             <article>
               <h3 className="heading-7">Members</h3>
               <ul className="flex flex-wrap gap-x-3">
-                {artist.members.map((member) => (
-                  <li>{member}</li>
+                {artist.members.map((member, i) => (
+                  <li key={i}>{member}</li>
                 ))}
               </ul>
               {/* <p>{artist.members}</p> */}
