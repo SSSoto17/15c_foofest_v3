@@ -13,7 +13,7 @@ export default function Page() {
   );
 }
 
-export function FormHeader({ activeStep }) {
+export function FormHeader({ activeStep, isPending }) {
   return (
     <>
       <header
@@ -23,7 +23,12 @@ export function FormHeader({ activeStep }) {
       >
         <ol className="sm:flex justify-center sm:justify-between items-center gap-4 font-semibold cursor-default">
           {formSteps.map((step, id) => (
-            <FormStepIndicator activeStep={activeStep} {...step} key={id} />
+            <FormStepIndicator
+              activeStep={activeStep}
+              {...step}
+              key={id}
+              isPending={isPending}
+            />
           ))}
         </ol>
       </header>
@@ -35,7 +40,7 @@ export function FormHeader({ activeStep }) {
   );
 }
 
-function FormStepIndicator({ activeStep, step, title }) {
+function FormStepIndicator({ activeStep, step, isPending, title }) {
   return (
     <>
       <li
@@ -61,6 +66,9 @@ function FormStepIndicator({ activeStep, step, title }) {
   );
 }
 
+import { CgSpinner } from "react-icons/cg";
+import { PiLockBold } from "react-icons/pi";
+
 export function FormFooter({ activeStep, isPending }) {
   return (
     <footer className="self-end flex justify-center sm:justify-end gap-4 items-end">
@@ -74,8 +82,23 @@ export function FormFooter({ activeStep, isPending }) {
           Back
         </Button>
       )} */}
-      <Button variant="primary" size="base" isDisabled={isPending}>
-        {activeStep === 3 ? "Purchase" : "Next"}
+      <Button variant="form" size="base" isDisabled={isPending}>
+        {activeStep === 3 ? (
+          <p className="flex gap-2 place-content-center items-center relative">
+            <PiLockBold size="20" />
+            Purchase
+          </p>
+        ) : (
+          <p className="flex gap-2 place-content-center items-center relative">
+            Next{" "}
+            {isPending && (
+              <CgSpinner
+                size="24"
+                className="loaderIcon absolute inset-0 left-4"
+              />
+            )}
+          </p>
+        )}
       </Button>
     </footer>
   );

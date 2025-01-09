@@ -1,7 +1,12 @@
 "use client";
 
 // COMPONENTS
-import BookingStepOne from "./StepOne";
+import Loading, {
+  ProcessingOrder,
+} from "@/app/session/reservation/flow/checkout/loading";
+const BookingStepOne = dynamic(() => import("./StepOne"), {
+  loading: () => <Loading />,
+});
 import BookingStepTwo from "./StepTwo";
 import BookingStepThree from "./StepThree";
 import { FormHeader } from "@/app/session/reservation/flow/checkout/page";
@@ -13,6 +18,8 @@ import { useSessionActions } from "@/store/SessionStore";
 import { submitOrder } from "@/app/session/reservation/flow/checkout/actions";
 import { useOrderActions } from "@/store/orderStore";
 import { startTransition } from "react";
+import dynamic from "next/dynamic";
+import { Processing } from "@/lib/utils";
 
 export default function BookingWindow() {
   const router = useRouter();
@@ -21,8 +28,6 @@ export default function BookingWindow() {
   const [state, submit, isPending] = useActionState(submitOrder, initState);
   const { setActiveStep, setReservationId } = useSessionActions();
   const { setOrderData } = useOrderActions();
-
-  console.log(state);
 
   useEffect(() => {
     setActiveStep(state?.activeStep);
@@ -43,7 +48,8 @@ export default function BookingWindow() {
   }
   return (
     <section className="grid md:grid-rows-subgrid md:col-span-3 md:row-span-full border border-border-form">
-      <FormHeader activeStep={state?.activeStep} />
+      {state?.activeStep === 3 && isPending && <ProcessingOrder />}
+      <FormHeader {...state} isPending={isPending} />
       {state?.activeStep === 2 ? (
         <BookingStepTwo
           submit={handleSubmit}

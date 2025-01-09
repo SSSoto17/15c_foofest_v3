@@ -29,7 +29,9 @@ export default function BookingStepTwo({
     <Form
       onSubmit={submit}
       onKeyDown={keyEnter}
-      className="grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12"
+      className={`${
+        isPending && "opacity-60"
+      } grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12`}
     >
       <EnterGuestData {...tickets} error={errors?.guests} />
       <SelectTents error={errors} />

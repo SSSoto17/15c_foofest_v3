@@ -29,10 +29,7 @@ export function QuantitySelector({ data, children }) {
           {data.price} DKK
         </span>
       </Label>
-      <Spinner
-        // forTickets
-        {...data}
-      />
+      <Spinner {...data} />
     </Field>
   );
 }
@@ -47,6 +44,8 @@ function Spinner({
 }) {
   const [quantity, setQuantity] = useState(currentTotal);
 
+  console.log(error?.includes("select") && overallTotal < 1);
+
   useEffect(() => {
     setTotal(quantity);
   }, [quantity]);
@@ -57,7 +56,7 @@ function Spinner({
         className={`input-field input-field-number--focus flex justify-between gap-4 w-fit ${
           ((error?.includes("select") && overallTotal < 1) ||
             (error?.includes("limit") && currentTotal > 10) ||
-            error) &&
+            error?.includes("space")) &&
           "not-has-data-focus:border-border-global--error bg-surface-input--focus"
         }`}
       >

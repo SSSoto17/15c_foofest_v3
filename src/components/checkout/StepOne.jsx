@@ -17,6 +17,7 @@ import { getCampingAreas } from "@/lib/order";
 import { keyEnter } from "@/lib/utils";
 import useTicketListing from "@/hooks/useTicketListing";
 import useAvailableArea from "@/hooks/useAvailableArea";
+import Loading from "@/app/session/reservation/flow/checkout/loading";
 
 export default function BookingStepOne({
   activeStep,
@@ -26,18 +27,27 @@ export default function BookingStepOne({
 }) {
   const { areas, isLoading } = getCampingAreas();
 
-  if (isLoading) return;
-
   return (
     <Form
       onSubmit={submit}
       onKeyDown={keyEnter}
-      className="grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12"
+      className={`${
+        isPending && "opacity-60"
+      } grid row-span-2 gap-y-10 sm:gap-y-16 p-8 sm:p-12`}
     >
-      <SelectTickets error={errors} />
-      <SelectCampingArea data={areas} />
-      <GreenFee />
-      <FormFooter activeStep={activeStep} isPending={isPending} />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <SelectTickets error={errors} />
+          <SelectCampingArea data={areas} />
+          <GreenFee />
+          <FormFooter
+            activeStep={activeStep}
+            isPending={isLoading || isPending}
+          />
+        </>
+      )}
     </Form>
   );
 }
@@ -48,7 +58,11 @@ function SelectTickets({ error }) {
   return (
     <Fieldset className="grid gap-y-4 max-w-xl">
       <Legend className="heading-5">Tickets</Legend>
-      <ErrorText>{error?.tooFewTickets || error?.tooManyTickets}</ErrorText>
+      <ErrorText>
+        {ticketListing[0].overallTotal < 1 &&
+          error &&
+          (error?.tooFewTickets || error?.tooManyTickets)}
+      </ErrorText>
       {ticketListing.map((ticket, id) => {
         return (
           <QuantitySelector key={id} data={ticket}>

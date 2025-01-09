@@ -1,4 +1,6 @@
 import MainLayout from "@/components/GlobalComponents";
+import Loading from "./loading";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "FooFest",
@@ -6,5 +8,9 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return <MainLayout page="booking">{children}</MainLayout>;
+  return (
+    <MainLayout page="booking">
+      <Suspense fallback={<Loading />}>{children}</Suspense>
+    </MainLayout>
+  );
 }

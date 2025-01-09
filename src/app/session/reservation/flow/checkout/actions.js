@@ -9,6 +9,7 @@ import {
   postGuests,
   deleteUnpaid,
 } from "@/lib/order";
+import { Processing } from "@/lib/utils";
 
 export async function submitOrder(prev, formData) {
   // BOOKING FLOW || STEP ONE
@@ -73,6 +74,7 @@ async function submitStepOne(prev, formData) {
   }
 
   if (errors.tooFewTickets || errors.tooManyTickets) {
+    await Processing(1000);
     return { activeStep: prev.activeStep, success: false, errors, orderData };
   }
 
@@ -83,6 +85,7 @@ async function submitStepOne(prev, formData) {
     orderData.paid = false;
 
     await postOrder(orderData);
+    await Processing(700);
 
     return {
       success: false,
@@ -188,6 +191,7 @@ async function submitStepTwo(prev, formData) {
   }
 
   if (errors.guests || errors.tentSetup) {
+    await Processing(1000);
     return {
       activeStep: prev.activeStep,
       success: false,
@@ -205,6 +209,7 @@ async function submitStepTwo(prev, formData) {
   await patchOrder(orderData);
 
   // NEXT STEP
+  await Processing(700);
   return {
     success: false,
     errors: {},
@@ -217,8 +222,10 @@ async function submitStepThree(prev, formData) {
   const orderData = { ...prev.orderData };
 
   // COLLECT CUSTOMER DATA
-  orderData.name = formData.get("name");
-  orderData.email = formData.get("email");
+  if (!orderData.name || !orderData.email) {
+    orderData.name = formData.get("name");
+    orderData.email = formData.get("email");
+  }
 
   // COLLECT PAYMENT
   const cardDetails = {};
@@ -255,6 +262,7 @@ async function submitStepThree(prev, formData) {
   }
 
   if (errors.name || errors.email || errors.cardDetails) {
+    await Processing(1000);
     return {
       activeStep: prev.activeStep,
       success: false,
@@ -266,6 +274,7 @@ async function submitStepThree(prev, formData) {
   // POST TO RESERVATIONS
 
   await patchOrder(orderData);
+  await Processing(2000);
   return { activeStep: prev.activeStep, success: true, errors, orderData };
 }
 
