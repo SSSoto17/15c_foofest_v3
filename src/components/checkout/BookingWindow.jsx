@@ -23,7 +23,7 @@ import { submitOrder } from "@/app/session/reservation/flow/checkout/actions";
 
 // STORE
 import { useSessionActions } from "@/store/SessionStore";
-import { useOrderActions } from "@/store/OdrderStore";
+import { useOrderActions } from "@/store/OrderStore";
 
 export default function BookingWindow() {
   // FORM ACTION
