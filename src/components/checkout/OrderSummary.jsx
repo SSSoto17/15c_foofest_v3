@@ -1,6 +1,6 @@
 "use client";
 
-import { useOrder } from "@/store/OdrderStore";
+import { useOrder } from "@/store/OrderStore";
 import ReservationTimer from "./ReservationTimer";
 import { useTickets } from "@/store/TicketStore";
 import { useTents } from "@/store/TentStore";
