@@ -11,24 +11,39 @@ import BookingStepTwo from "./StepTwo";
 import BookingStepThree from "./StepThree";
 import { FormHeader } from "@/app/session/reservation/flow/checkout/page";
 
-// FUNCTIONS
-import { useActionState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSessionActions } from "@/store/SessionStore";
-import { submitOrder } from "@/app/session/reservation/flow/checkout/actions";
-import { useOrderActions } from "@/store/orderStore";
-import { startTransition } from "react";
+// FUNCTIONS || NEXT
 import dynamic from "next/dynamic";
-import { Processing } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+
+// FUNCTIONS || REACT
+import { useActionState, useEffect, startTransition } from "react";
+
+// SERVER ACTION
+import { submitOrder } from "@/app/session/reservation/flow/checkout/actions";
+
+// STORE
+import { useSessionActions } from "@/store/SessionStore";
+import { useOrderActions } from "@/store/OdrderStore";
 
 export default function BookingWindow() {
-  const router = useRouter();
+  // FORM ACTION
+  // const initState = { activeStep: 1, success: false, errors: {} };
+  // const [state, submit, isPending] = useActionState(submitOrder, initState);
 
   const initState = { activeStep: 1, success: false, errors: {} };
   const [state, submit, isPending] = useActionState(submitOrder, initState);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    startTransition(() => submit(formData));
+  }
+
+  // STORE
   const { setActiveStep, setReservationId } = useSessionActions();
   const { setOrderData } = useOrderActions();
 
+  // UPDATE STORES
   useEffect(() => {
     setActiveStep(state?.activeStep);
     setOrderData(state?.orderData);
@@ -37,15 +52,12 @@ export default function BookingWindow() {
     }
   }, [state]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    startTransition(() => submit(formData));
-  }
-
+  // SUBMISSION REDIRECT
+  const router = useRouter();
   if (state?.success) {
     router.push("/session/reservation/success");
   }
+
   return (
     <section className="grid md:grid-rows-subgrid md:col-span-3 md:row-span-full border border-border-form">
       {state?.activeStep === 3 && isPending && <ProcessingOrder />}
