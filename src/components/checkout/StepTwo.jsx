@@ -136,7 +136,7 @@ function SelectTents({ error }) {
   const tentListing = useTentListing(error);
 
   return (
-    <Accordion label="Tent Setup" variant="secondary">
+    <Accordion label="Tent Setup" variant="secondary" optional>
       <Fieldset className="grid gap-y-3 ml-12">
         <ErrorText>{error?.tentSetup}</ErrorText>
         {tentListing
