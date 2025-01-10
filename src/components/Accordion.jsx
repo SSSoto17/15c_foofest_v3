@@ -1,8 +1,14 @@
 import { MdAdd } from "react-icons/md";
 
-export default function Accordion({ label, variant, name, children }) {
+export default function Accordion({
+  label,
+  variant,
+  name,
+  optional,
+  children,
+}) {
   const variants = {
-    primary: "heading-4 justify-between",
+    primary: "heading-4",
     secondary: "body-copy font-bold",
   };
 
@@ -14,7 +20,7 @@ export default function Accordion({ label, variant, name, children }) {
       <summary
         className={`cursor-pointer flex items-center justify-between gap-4 ${variants[variant]}`}
       >
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <MdAdd
             size="2rem"
             className={`duration-300 ease-in-out group-open:rotate-45 ${
@@ -23,9 +29,11 @@ export default function Accordion({ label, variant, name, children }) {
           />
           {label}
         </div>
-        <span className="body-copy-small font-bold uppercase opacity-50 justify-self-end mx-8">
-          Optional
-        </span>
+        {optional && (
+          <span className="body-copy-small font-bold uppercase opacity-50 justify-self-end -mr-10">
+            Optional
+          </span>
+        )}
       </summary>
       {children}
     </details>

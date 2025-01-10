@@ -15,6 +15,7 @@ export default function Home() {
             className="full-bleed h-svh object-cover row-start-1 md:h-full"
             src={hero}
             alt="Image of FooFest participants. Photo by Roberto Rendon on Unsplash."
+            priority
           ></Image>
           <div className="col-start-2 row-start-1 self-center flow-space grid grid-cols-3">
             <h1 className="heading-1 uppercase text-balance col-span-full py-4 md:py-0 ">
