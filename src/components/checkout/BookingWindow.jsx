@@ -18,7 +18,7 @@ export default function BookingWindow({ state, isPending, children }) {
       >
         {children}
       </article>
-      <FormFooter activeStep={state?.step} isPending={isPending} />
+      <FormFooter {...state} isPending={isPending} />
     </section>
   );
 }
@@ -34,7 +34,7 @@ function FormHeader({ step, isPending }) {
         <ol className="sm:flex justify-center sm:justify-between items-center gap-4 font-semibold cursor-default">
           {formSteps.map((obj, id) => (
             <FormStepIndicator
-              activeStep={step}
+              active={step}
               {...obj}
               key={id}
               isPending={isPending}
@@ -50,7 +50,7 @@ function FormHeader({ step, isPending }) {
   );
 }
 
-function FormStepIndicator({ activeStep, step, title }) {
+function FormStepIndicator({ active, step, title }) {
   return (
     <>
       <li
@@ -58,11 +58,11 @@ function FormStepIndicator({ activeStep, step, title }) {
         className="hidden first-of-type:hidden sm:block w-10 h-0.5 bg-aztec-800"
       />
       <li
-        {...(activeStep >= step && {
+        {...(active >= step && {
           "data-active": true,
         })}
         className={`group body-copy font-semibold flex items-center gap-4 place-content-center sm:justify-between ${
-          activeStep === step
+          active === step
             ? "text-text-global"
             : "text-text-global--disabled hidden sm:flex"
         }`}
@@ -76,16 +76,16 @@ function FormStepIndicator({ activeStep, step, title }) {
   );
 }
 
-function FormFooter({ activeStep, isPending }) {
+function FormFooter({ step, isPending }) {
   // const { isPending, data, method, action } = useFormStatus();
   // console.log(data);
   return (
     <footer
       className={`pb-8 px-12 self-end flex justify-center ${
-        activeStep > 1 ? "sm:justify-between" : "sm:justify-end"
+        step > 1 ? "sm:justify-between" : "sm:justify-end"
       } gap-4 items-end`}
     >
-      {activeStep > 1 && (
+      {step > 1 && (
         <Button
           name="back"
           type="submit"
@@ -111,11 +111,11 @@ function FormFooter({ activeStep, isPending }) {
         size="base"
         isDisabled={isPending}
       >
-        {activeStep === 3 ? (
-          <p className="flex gap-2 place-content-center items-center relative">
+        {step === 3 ? (
+          <div className="flex gap-2 place-content-center items-center relative">
             <PiLockBold size="20" />
-            Purchase
-          </p>
+            <p>Purchase</p>
+          </div>
         ) : (
           <p className="flex gap-2 place-content-center items-center relative">
             Next{" "}

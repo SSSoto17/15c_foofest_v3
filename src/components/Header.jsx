@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogPanel,
   Description,
+  Button,
 } from "@headlessui/react";
 import { useState } from "react";
 import { deleteUnpaid } from "@/lib/order";
@@ -28,7 +29,10 @@ export default function Header({ linksActive }) {
             <Image src={logo} alt="FooFest" className="h-16 w-fit" />
           </Link>
         ) : (
-          <WarningEscape />
+          <>
+            <WarningEscape />
+            <Image src={logo} alt="FooFest" className="h-14 w-fit" />
+          </>
         )}
         {linksActive && (
           <>
@@ -126,6 +130,7 @@ function MobileNavIcon({ setIsOpen, isOpen }) {
   );
 }
 
+import { MdArrowLeft } from "react-icons/md";
 function WarningEscape() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -136,37 +141,38 @@ function WarningEscape() {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="cursor-pointer">
-        <Image src={logo} alt="FooFest" className="h-16 w-fit" />
-      </button>
+      <Button
+        onClick={() => setIsOpen(true)}
+        className="cursor-pointer body-copy flex items-center py-2 hover:opacity-80"
+      >
+        <MdArrowLeft size="32" />
+        Back
+      </Button>
       <Dialog
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        className="fixed inset-0 flex items-center justify-center p-4"
+        className="fixed inset-0 flex items-center justify-center p-4 backdrop-blur-md backdrop-grayscale-25 backdrop-brightness-50 z-50"
       >
-        <div className="bg-surface-global p-12 border border-border-global max-w-md">
-          <DialogPanel className="grid gap-8">
-            <DialogTitle className="heading-6 text-red-400">
-              Leave Booking Session
-            </DialogTitle>
+        <div className="bg-surface-global p-12 border border-border-global rounded-sm max-w-md">
+          <DialogPanel className="grid gap-6">
             <div className="grid gap-2">
-              <Description className="font-bold">
-                Are you sure you wish to leave?
-              </Description>
-              <p className="text-aztec-300">
+              <DialogTitle className="heading-6">
+                Leave Booking Session
+              </DialogTitle>
+              <Description className="text-aztec-300">
                 If you exit the booking session you will lose your reservation.
-              </p>
+              </Description>
             </div>
             <div className="flex gap-4">
               <button
                 onClick={() => setIsOpen(false)}
-                className="grow cursor-pointer bg-aztec-300 p-2 rounded-sm font-semibold max-w-40"
+                className="grow cursor-pointer bg-aztec-300 hover:bg-aztec-400 p-2 rounded-sm font-semibold max-w-40"
               >
                 Cancel
               </button>
               <button
                 onClick={handleExit}
-                className="grow cursor-pointer bg-rose-600 p-2 rounded-sm font-semibold max-w-40"
+                className="grow cursor-pointer bg-rose-600 hover:bg-rose-500 p-2 rounded-sm font-semibold max-w-40"
               >
                 Exit
               </button>

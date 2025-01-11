@@ -47,6 +47,9 @@ export default function Page() {
     if (handler === "back") {
       formData.append("isGoingBack", true);
     }
+    if (state?.step === 3 && handler === "next") {
+      // <ProcessingOrder />;
+    }
     startTransition(() => submit(formData));
   }
 
@@ -69,10 +72,11 @@ export default function Page() {
     router.push("/session/reservation/success");
   }
 
-  if (state?.step === 3 && isPending) return <ProcessingOrder />;
+  // if (state?.step === 3 && isPending) return <ProcessingOrder />;
 
   return (
     <main>
+      {/* <ProcessingOrder /> */}
       {/* {state?.orderData?.paid && isPending && <ProcessingOrder />} */}
       <Form
         onSubmit={handleSubmit}

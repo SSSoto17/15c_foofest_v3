@@ -1,10 +1,11 @@
+"use client";
+
 import { Button } from "@headlessui/react";
 
 export default function SiteButton({
   name,
   variant,
   size,
-  formAction,
   onClick,
   isDisabled,
   type,
@@ -26,7 +27,6 @@ export default function SiteButton({
       name={name}
       onClick={onClick}
       type={type}
-      // {...(formAction ? { formAction } : { onClick })}
       disabled={isDisabled}
       className={`button ${variants[variant]} ${variants[size]}`}
     >
