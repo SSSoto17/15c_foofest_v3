@@ -28,7 +28,7 @@ export function SelectTickets({ error }) {
   const ticketListing = useTicketListing(error);
 
   return (
-    <Fieldset className="grid grid-rows-[auto_1rem] gap-y-4 max-w-xl">
+    <Fieldset className="grid grid-rows-[auto_1rem_auto] gap-y-4 max-w-xl">
       <Legend className="heading-5">Tickets</Legend>
       <ErrorText>
         {ticketListing[0].overallTotal < 1 &&
@@ -53,8 +53,11 @@ export function SelectCampingArea({ camping_area, data }) {
   );
 
   return (
-    <Fieldset className="grid gap-y-4 md:gap-y-6">
+    <Fieldset className="grid grid-rows-[auto_1rem_auto] gap-y-4 md:gap-y-6">
       <Legend className="heading-5">Camping Spot</Legend>
+      <p className="body-copy-small opacity-70">
+        Choose a camping area for your stay.
+      </p>
       <RadioSelector
         data={areaData}
         selected={selected}
@@ -70,10 +73,14 @@ export function GreenFee({ green_fee }) {
     price: 249,
   };
   return (
-    <Fieldset className="grid gap-y-2">
+    <Fieldset className="flex items-center gap-2">
       <CheckField data={data} savedState={green_fee}>
         Green Fee
       </CheckField>
+      <InformationTooltip>
+        Support our commitment to sustainability and help reduce the festival's
+        environmental impact.
+      </InformationTooltip>
     </Fieldset>
   );
 }
@@ -187,8 +194,15 @@ export function SelectTents({ error }) {
 
   return (
     <Accordion label="Tent Setup" variant="secondary" optional>
-      <Fieldset className="grid gap-y-3 ml-12">
-        <ErrorText>{error?.tentSetup}</ErrorText>
+      <Fieldset className="grid grid-rows-[1.rem_auto] gap-y-4 ml-12 pt-4">
+        {error?.tentSetup ? (
+          <ErrorText>{error?.tentSetup}</ErrorText>
+        ) : (
+          <p className="body-copy-small opacity-70">
+            As add-on, FooFest can provide tents for your stay. Enough tent
+            space must be provided for all guests.
+          </p>
+        )}
         {tentListing
           .filter((tent) => tent.display === true)
           .map((tent, id) => {
@@ -306,17 +320,10 @@ export function EnterPaymentInfo({ error }) {
                 error && errorStyle
               }`}
             />
-            <div className="group absolute top-10 right-2">
-              <FaRegQuestionCircle
-                aria-label="Details"
-                className=" cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity duration-150"
-                size="16"
-              />
-              <p className="opacity-0 group-hover:opacity-100 body-copy-small absolute left-8 -top-4 min-w-64 bg-aztec-950 px-2 py-1 body-copy-small text-aztec-300 rounded-xs border border-border-global">
-                The card security code is a three digit number on the back of
-                your card.
-              </p>
-            </div>
+            <InformationTooltip>
+              The card security code is a three digit number on the back of your
+              card.
+            </InformationTooltip>
           </Field>
         </div>
         <MdOutlineError
@@ -345,5 +352,30 @@ export function EnterPaymentInfo({ error }) {
         />
       </div>
     </Fieldset>
+  );
+}
+
+export function InformationTooltip({ children }) {
+  return (
+    <div className="group flex items-center gap-2">
+      <FaRegQuestionCircle
+        aria-label="Details"
+        className="cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity duration-150"
+        size="16"
+      />
+      <p className="max-w-96 opacity-0 group-hover:opacity-100 body-copy-small bg-aztec-950 px-2 py-1 body-copy-small text-aztec-300 rounded-xs border border-border-global">
+        {children}
+      </p>
+    </div>
+    // <div className="group absolute top-10 right-2">
+    //   <FaRegQuestionCircle
+    //     aria-label="Details"
+    //     className=" cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity duration-150"
+    //     size="16"
+    //   />
+    //   <p className="opacity-0 group-hover:opacity-100 body-copy-small absolute left-8 -top-4 min-w-64 bg-aztec-950 px-2 py-1 body-copy-small text-aztec-300 rounded-xs border border-border-global">
+    //     {children}
+    //   </p>
+    // </div>
   );
 }

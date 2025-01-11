@@ -105,42 +105,42 @@
   /* TEXT STYLES */
 
   .heading-title {
-    @apply text-res-6xl leading-tight	 font-display font-normal uppercase;
+    @apply text-res-6xl leading-tight	 font-display font-normal uppercase cursor-default;
   }
   .heading-1 {
-    @apply text-res-5xl leading-tight	 font-display font-normal;
+    @apply text-res-5xl leading-tight	 font-display font-normal cursor-default;
   }
   .heading-2 {
-    @apply text-res-4xl leading-tight	 font-display font-normal;
+    @apply text-res-4xl leading-tight	 font-display font-normal cursor-default;
   }
   .heading-3 {
-    @apply text-res-3xl leading-tight	 font-display font-normal;
+    @apply text-res-3xl leading-tight	 font-display font-normal cursor-default;
   }
 
   .heading-4 {
-    @apply text-res-xl leading-tight tracking-wide	font-display font-bold uppercase;
+    @apply text-res-xl leading-tight tracking-wide	font-display font-bold uppercase cursor-default;
   }
   .heading-5 {
-    @apply text-res-xl leading-tight font-semibold;
+    @apply text-res-xl leading-tight font-semibold cursor-default;
   }
 
   .heading-6 {
-    @apply text-res-lg leading-tight font-bold uppercase;
+    @apply text-res-lg leading-tight font-bold uppercase cursor-default;
   }
 
   .heading-7 {
-    @apply leading-tight font-bold uppercase text-text-heading;
+    @apply leading-tight font-bold uppercase text-text-heading cursor-default;
   }
   .heading-tagline {
-    @apply text-res-lg leading-tight	 uppercase text-text-heading;
+    @apply text-res-lg leading-tight uppercase text-text-heading cursor-default;
   }
 
   .body-copy {
-    @apply text-res-base leading-normal font-normal max-w-prose;
+    @apply text-res-base leading-normal font-normal max-w-prose cursor-default;
   }
 
   .body-copy-small {
-    @apply text-res-sm leading-normal font-normal;
+    @apply text-res-sm leading-normal font-normal cursor-default;
   }
 
   /* BASE COMPONENTS */

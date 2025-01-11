@@ -14,7 +14,7 @@ export default function BookingWindow({ state, isPending, children }) {
       <article
         className={`${
           isPending && "animate-pulse"
-        } grid gap-y-12 sm:gap-y-16 p-8 sm:p-12`}
+        } grid gap-y-12 sm:gap-y-14 p-8 sm:p-12 content-start`}
       >
         {children}
       </article>

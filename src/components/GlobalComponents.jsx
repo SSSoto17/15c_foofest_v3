@@ -15,7 +15,7 @@ export default function MainLayout({ page, children }) {
       <body className="text-forest-100 text-desk-base">
         <Header linksActive={page != "booking"} />
         {children}
-        <Footer />
+        {page !== "booking" && <Footer />}
       </body>
     </html>
   );

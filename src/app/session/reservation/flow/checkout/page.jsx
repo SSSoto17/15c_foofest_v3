@@ -75,7 +75,7 @@ export default function Page() {
   // if (state?.step === 3 && isPending) return <ProcessingOrder />;
 
   return (
-    <main>
+    <main className="mb-6">
       {/* <ProcessingOrder /> */}
       {/* {state?.orderData?.paid && isPending && <ProcessingOrder />} */}
       <Form

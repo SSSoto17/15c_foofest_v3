@@ -194,6 +194,9 @@ export async function submitStepTwo(prev, formData) {
         } guests.`;
       }
     }
+    if (guests.length === 1 && tentSpaces.total > 2) {
+      errors.tentSetup = "You can only add one tent for a single guest.";
+    }
 
     if (errors.guests || errors.tentSetup) {
       await Processing(1500);

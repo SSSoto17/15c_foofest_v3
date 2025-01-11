@@ -158,7 +158,7 @@ export function CheckField({ data, savedState, minor, children }) {
       >
         {children}{" "}
         {data?.price && (
-          <span className=" opacity-50 place-self-end mx-8">
+          <span className="opacity-50 place-self-end ml-8">
             {data?.price} DKK
           </span>
         )}
@@ -265,12 +265,8 @@ export function TextInput({
 }
 
 // ERROR TEXT
-export function ErrorText({ retainHeight, children }) {
+export function ErrorText({ children }) {
   return (
-    <small
-      className={`body-copy-small text-red-200 italic ${retainHeight && "h-6"}`}
-    >
-      {children}
-    </small>
+    <small className="body-copy-small text-red-200 italic">{children}</small>
   );
 }
