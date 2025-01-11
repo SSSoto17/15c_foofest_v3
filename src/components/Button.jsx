@@ -1,9 +1,13 @@
-export default function Button({
+import { Button } from "@headlessui/react";
+
+export default function SiteButton({
+  name,
   variant,
   size,
   formAction,
   onClick,
   isDisabled,
+  type,
   children,
 }) {
   const variants = {
@@ -18,12 +22,15 @@ export default function Button({
     } border-forest-600 body-copy bg-forest-600 font-semibold hover:bg-forest-500 hover:border-forest-500 disabled:bg-forest-800 disabled:border-forest-800 disabled:text-aztec-400`,
   };
   return (
-    <button
-      {...(formAction ? { formAction } : { onClick })}
+    <Button
+      name={name}
+      onClick={onClick}
+      type={type}
+      // {...(formAction ? { formAction } : { onClick })}
       disabled={isDisabled}
       className={`button ${variants[variant]} ${variants[size]}`}
     >
       {children}
-    </button>
+    </Button>
   );
 }

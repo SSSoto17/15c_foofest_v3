@@ -137,8 +137,8 @@ export function RadioSelector({ data, selected, setSelected }) {
 }
 
 // CHECKBOX
-export function CheckField({ data, minor, children }) {
-  const [checked, setChecked] = useState(false);
+export function CheckField({ data, savedState, minor, children }) {
+  const [checked, setChecked] = useState(savedState || false);
   return (
     <Field className="flex items-center gap-2 md:gap-3 max-w-xl group hover:cursor-pointer">
       <Checkbox

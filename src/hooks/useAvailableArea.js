@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { getTotalQuantity } from "@/lib/utils";
 
-export default function useAvailableArea(data) {
+export default function useAvailableArea(data, init) {
+  console.log(init);
   // TICKET QUANTITY IN BASKET
   const ticketQuantity = getTotalQuantity("tickets");
 
   // INITIALIZING STATE
   const initialArea = data.find((obj) => obj.available > 0);
-  const [selected, setSelected] = useState(initialArea.area);
+  const [selected, setSelected] = useState(init || initialArea.area);
 
   // RESET STATE IF TOO FEW AVAILABLE SPOTS
   useEffect(() => {

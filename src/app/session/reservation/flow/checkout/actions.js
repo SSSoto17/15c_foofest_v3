@@ -8,34 +8,35 @@ import {
   patchOrder,
   postGuests,
   deleteUnpaid,
+  getOrderById,
 } from "@/lib/order";
 import { Processing } from "@/lib/utils";
 
 export async function submitOrder(prev, formData) {
   // BOOKING FLOW || STEP ONE
-  if (prev.activeStep === 1) {
+  if (prev.step === 1) {
     const stepOne = await submitStepOne(prev, formData);
     revalidatePath("/");
-    return { activeStep: 2, ...stepOne };
+    return { success: false, ...stepOne };
   }
 
   // BOOKING FLOW || STEP TWO
-  if (prev.activeStep === 2) {
+  if (prev.step === 2) {
     const stepTwo = await submitStepTwo(prev, formData);
     revalidatePath("/");
-    return { activeStep: 3, ...stepTwo };
+    return { success: false, ...stepTwo };
   }
 
   // BOOKING FLOW || STEP THREE
-  if (prev.activeStep === 3) {
+  if (prev.step === 3) {
     const stepThree = await submitStepThree(prev, formData);
     await deleteUnpaid();
-    return { ...stepThree };
+    return { success: true, ...stepThree };
   }
 }
 
 // BOOKING FLOW || STEP ONE
-async function submitStepOne(prev, formData) {
+export async function submitStepOne(prev, formData) {
   // COLLECT ORDER
   const partoutQuantity = Number(formData.get("partout"));
   const vipQuantity = Number(formData.get("vip"));
@@ -74,32 +75,35 @@ async function submitStepOne(prev, formData) {
   }
 
   if (errors.tooFewTickets || errors.tooManyTickets) {
-    await Processing(1000);
-    return { activeStep: prev.activeStep, success: false, errors, orderData };
+    await Processing(1500);
+    return { ...prev, success: false, errors, orderData };
   }
 
   // PUT RESERVATION
   const response = await putReservation(reservationData);
+
   if (response) {
     orderData.reservation_id = response.id;
     orderData.paid = false;
 
     await postOrder(orderData);
-    await Processing(700);
+    await Processing(1000);
 
     return {
-      success: false,
+      step: 2,
       errors: {},
       orderData,
       tickets,
     };
   } else {
-    return { success: false, errors: {} };
+    return { errors: {} };
   }
 }
 
 // BOOKING FLOW || STEP TWO
-async function submitStepTwo(prev, formData) {
+export async function submitStepTwo(prev, formData) {
+  const isGoingBack = Boolean(formData.get("isGoingBack"));
+
   // LINK GUESTS TO RESERVATION
   const reservationId = prev.orderData.reservation_id;
   // IS BUYER GUEST?
@@ -155,51 +159,53 @@ async function submitStepTwo(prev, formData) {
   // FORM VALIDATION
   const errors = {};
 
-  guests.map(({ name, email }) => {
-    if (!name || name.length < 2) {
-      errors.guests = {
-        name: "Please provide the name of each guest.",
-      };
-    }
-
-    if (isBuyer) {
+  if (!isGoingBack) {
+    guests.map(({ name, email }) => {
       if (!name || name.length < 2) {
         errors.guests = {
-          name: "Please provide your name and email.",
+          name: "Please provide the name of each guest.",
         };
       }
-      if (!email || !email.includes("@") || !email.includes(".")) {
-        errors.guests = {
-          ...errors.guests,
-          email: "Please provide your name and email.",
-        };
+
+      if (isBuyer) {
+        if (!name || name.length < 2) {
+          errors.guests = {
+            name: "Please provide your name and email.",
+          };
+        }
+        if (!email || !email.includes("@") || !email.includes(".")) {
+          errors.guests = {
+            ...errors.guests,
+            email: "Please provide your name and email.",
+          };
+        }
+      }
+    });
+
+    if (guests.length > 1 && tentSpaces.total) {
+      if (guests.length < tentSpaces.total) {
+        errors.tentSetup = `Please fill up all available tent space. ${
+          tentSpaces.total - guests.length
+        } spaces left to fill.`;
+      }
+      if (guests.length > tentSpaces.total) {
+        errors.tentSetup = `Please ensure room for all guests. Missing space for ${
+          guests.length - tentSpaces.total
+        } guests.`;
       }
     }
-  });
 
-  if (guests.length > 1 && tentSpaces.total) {
-    if (guests.length < tentSpaces.total) {
-      errors.tentSetup = `Please fill up all available tent space. ${
-        tentSpaces.total - guests.length
-      } spaces left to fill.`;
+    if (errors.guests || errors.tentSetup) {
+      await Processing(1500);
+      return {
+        ...prev,
+        success: false,
+        errors,
+        orderData,
+        tickets: { ...prev.tickets, data: guests },
+        isBuyer,
+      };
     }
-    if (guests.length > tentSpaces.total) {
-      errors.tentSetup = `Please ensure room for all guests. Missing space for ${
-        guests.length - tentSpaces.total
-      } guests.`;
-    }
-  }
-
-  if (errors.guests || errors.tentSetup) {
-    await Processing(1000);
-    return {
-      activeStep: prev.activeStep,
-      success: false,
-      errors,
-      orderData,
-      tickets: { ...prev.tickets, data: guests },
-      isBuyer,
-    };
   }
 
   // POST TO GUESTS DATABASE
@@ -208,17 +214,26 @@ async function submitStepTwo(prev, formData) {
   // POST TO RESERVATIONS DATABASE
   await patchOrder(orderData);
 
-  // NEXT STEP
-  await Processing(700);
+  // NAVIGATE
+  if (isGoingBack) {
+    await Processing(600);
+  } else {
+    await Processing(1000);
+  }
+
   return {
-    success: false,
+    ...prev,
+    step: isGoingBack ? prev.step - 1 : prev.step + 1,
     errors: {},
     orderData,
+    tickets: { ...prev.tickets, data: guests },
+    isBuyer,
   };
 }
 
 // BOOKING FLOW || STEP THREE
-async function submitStepThree(prev, formData) {
+export async function submitStepThree(prev, formData) {
+  const isGoingBack = Boolean(formData.get("isGoingBack"));
   const orderData = { ...prev.orderData };
 
   // COLLECT CUSTOMER DATA
@@ -238,44 +253,56 @@ async function submitStepThree(prev, formData) {
   // FORM VALIDATION
   const errors = {};
 
-  if (!orderData.name || orderData.name.length <= 1) {
-    errors.name = "Please enter your name.";
-  }
+  if (!isGoingBack) {
+    if (!orderData.name || orderData.name.length <= 1) {
+      errors.name = "Please enter your name.";
+    }
 
-  if (
-    !orderData.email ||
-    !orderData.email.includes("@") ||
-    !orderData.email.includes(".")
-  ) {
-    errors.email = "Please enter your email.";
-  }
+    if (
+      !orderData.email ||
+      !orderData.email.includes("@") ||
+      !orderData.email.includes(".")
+    ) {
+      errors.email = "Please enter your email.";
+    }
 
-  if (
-    !cardDetails.cardNumber ||
-    !cardDetails.cardExp ||
-    !cardDetails.cardSec ||
-    !cardDetails.cardHolder
-  ) {
-    errors.cardDetails = "Please check your card details.";
-  } else {
-    orderData.paid = true;
-  }
+    if (
+      !cardDetails.cardNumber ||
+      !cardDetails.cardExp ||
+      !cardDetails.cardSec ||
+      !cardDetails.cardHolder
+    ) {
+      errors.cardDetails = "Please check your card details.";
+    } else {
+      orderData.paid = true;
+    }
 
-  if (errors.name || errors.email || errors.cardDetails) {
-    await Processing(1000);
-    return {
-      activeStep: prev.activeStep,
-      success: false,
-      errors,
-      orderData,
-    };
+    if (errors.name || errors.email || errors.cardDetails) {
+      await Processing(1000);
+      return {
+        ...prev,
+        success: false,
+        errors,
+        orderData,
+      };
+    }
   }
 
   // POST TO RESERVATIONS
 
   await patchOrder(orderData);
-  await Processing(2000);
-  return { activeStep: prev.activeStep, success: true, errors, orderData };
+  if (isGoingBack) {
+    await Processing(600);
+    return {
+      ...prev,
+      step: isGoingBack ? prev.step - 1 : prev.step,
+      success: false,
+      errors: {},
+      orderData,
+    };
+  } else {
+    await Processing(2000);
+  }
 }
 
 export async function submitTicketReservation(prev, formData) {
@@ -419,14 +446,14 @@ export async function submitTicketReservation(prev, formData) {
       errors.tentSetup
     ) {
       return {
-        activeStep: prev.activeStep,
+        ...prev,
         success: false,
         errors,
         orderDetails,
       };
     }
 
-    return { activeStep: 3, success: true, errors: {}, orderDetails };
+    return { activeStep: 3, errors: {}, orderDetails, ...prev };
   }
 
   // BOOKING FLOW || STEP THREE

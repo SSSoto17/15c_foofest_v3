@@ -1,86 +1,133 @@
-"use client";
-
 // COMPONENTS
-import Loading, {
-  ProcessingOrder,
-} from "@/app/session/reservation/flow/checkout/loading";
-const BookingStepOne = dynamic(() => import("./StepOne"), {
-  loading: () => <Loading />,
-});
-import BookingStepTwo from "./StepTwo";
-import BookingStepThree from "./StepThree";
-import { FormHeader } from "@/app/session/reservation/flow/checkout/page";
+import ReservationTimer from "@/components/checkout/ReservationTimer";
+import Button from "@/components/Button";
+import formSteps from "@/data/formsteps";
 
-// FUNCTIONS || NEXT
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+// ASSETS
+import { CgSpinner } from "react-icons/cg";
+import { PiLockBold } from "react-icons/pi";
 
-// FUNCTIONS || REACT
-import { useActionState, useEffect, startTransition } from "react";
-
-// SERVER ACTION
-import { submitOrder } from "@/app/session/reservation/flow/checkout/actions";
-
-// STORE
-import { useSessionActions } from "@/store/SessionStore";
-import { useOrderActions } from "@/store/OrderStore";
-
-export default function BookingWindow() {
-  // FORM ACTION
-  // const initState = { activeStep: 1, success: false, errors: {} };
-  // const [state, submit, isPending] = useActionState(submitOrder, initState);
-
-  const initState = { activeStep: 1, success: false, errors: {} };
-  const [state, submit, isPending] = useActionState(submitOrder, initState);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    startTransition(() => submit(formData));
-  }
-
-  // STORE
-  const { setActiveStep, setReservationId } = useSessionActions();
-  const { setOrderData } = useOrderActions();
-
-  // UPDATE STORES
-  useEffect(() => {
-    setActiveStep(state?.activeStep);
-    setOrderData(state?.orderData);
-    if (state?.activeStep === 2) {
-      setReservationId(state?.orderData?.reservationId);
-    }
-  }, [state]);
-
-  // SUBMISSION REDIRECT
-  const router = useRouter();
-  if (state?.success) {
-    router.push("/session/reservation/success");
-  }
-
+export default function BookingWindow({ state, isPending, children }) {
   return (
     <section className="grid md:grid-rows-subgrid md:col-span-3 md:row-span-full border border-border-form">
-      {state?.activeStep === 3 && isPending && <ProcessingOrder />}
       <FormHeader {...state} isPending={isPending} />
-      {state?.activeStep === 2 ? (
-        <BookingStepTwo
-          submit={handleSubmit}
-          isPending={isPending}
-          {...state}
-        />
-      ) : state?.activeStep === 3 ? (
-        <BookingStepThree
-          submit={handleSubmit}
-          isPending={isPending}
-          {...state}
-        />
-      ) : (
-        <BookingStepOne
-          submit={handleSubmit}
-          isPending={isPending}
-          {...state}
-        />
-      )}
+      <article
+        className={`${
+          isPending && "animate-pulse"
+        } grid gap-y-12 sm:gap-y-16 p-8 sm:p-12`}
+      >
+        {children}
+      </article>
+      <FormFooter activeStep={state?.step} isPending={isPending} />
     </section>
+  );
+}
+
+function FormHeader({ step, isPending }) {
+  return (
+    <>
+      <header
+        className={`border-b border-border-form py-8 px-12 ${
+          step === 3 ? "hidden md:block" : "block"
+        }`}
+      >
+        <ol className="sm:flex justify-center sm:justify-between items-center gap-4 font-semibold cursor-default">
+          {formSteps.map((obj, id) => (
+            <FormStepIndicator
+              activeStep={step}
+              {...obj}
+              key={id}
+              isPending={isPending}
+            />
+          ))}
+        </ol>
+      </header>
+
+      <div className={step === 1 ? "hidden" : "block sm:hidden"}>
+        {step !== 1 && <ReservationTimer />}
+      </div>
+    </>
+  );
+}
+
+function FormStepIndicator({ activeStep, step, title }) {
+  return (
+    <>
+      <li
+        key={crypto.randomUUID()}
+        className="hidden first-of-type:hidden sm:block w-10 h-0.5 bg-aztec-800"
+      />
+      <li
+        {...(activeStep >= step && {
+          "data-active": true,
+        })}
+        className={`group body-copy font-semibold flex items-center gap-4 place-content-center sm:justify-between ${
+          activeStep === step
+            ? "text-text-global"
+            : "text-text-global--disabled hidden sm:flex"
+        }`}
+      >
+        <span className="body-copy-small grid place-content-center w-6 sm:w-8 rounded-full aspect-square text-text-global bg-surface-action--disabled group-data-active:bg-surface-action">
+          {step}
+        </span>{" "}
+        {title}
+      </li>
+    </>
+  );
+}
+
+function FormFooter({ activeStep, isPending }) {
+  // const { isPending, data, method, action } = useFormStatus();
+  // console.log(data);
+  return (
+    <footer
+      className={`pb-8 px-12 self-end flex justify-center ${
+        activeStep > 1 ? "sm:justify-between" : "sm:justify-end"
+      } gap-4 items-end`}
+    >
+      {activeStep > 1 && (
+        <Button
+          name="back"
+          type="submit"
+          variant="primary"
+          size="base"
+          isDisabled={isPending}
+        >
+          <p className="flex gap-2 place-content-center items-center relative">
+            Back{" "}
+            {isPending && (
+              <CgSpinner
+                size="24"
+                className="loaderIcon absolute inset-0 left-4"
+              />
+            )}
+          </p>
+        </Button>
+      )}
+      <Button
+        name="next"
+        type="submit"
+        variant="form"
+        size="base"
+        isDisabled={isPending}
+      >
+        {activeStep === 3 ? (
+          <p className="flex gap-2 place-content-center items-center relative">
+            <PiLockBold size="20" />
+            Purchase
+          </p>
+        ) : (
+          <p className="flex gap-2 place-content-center items-center relative">
+            Next{" "}
+            {isPending && (
+              <CgSpinner
+                size="24"
+                className="loaderIcon absolute inset-0 left-4"
+              />
+            )}
+          </p>
+        )}
+      </Button>
+    </footer>
   );
 }

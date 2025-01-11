@@ -7,11 +7,12 @@ import { useTents } from "@/store/TentStore";
 import { orderTotal } from "@/lib/utils";
 import { useSession } from "@/store/SessionStore";
 
-export default function OrderSummary() {
-  const { orderData } = useOrder();
+export default function OrderSummary({ step, orderData }) {
+  console.log("reservation: ", orderData);
+  // const { orderData } = useOrder();
   const tickets = useTickets();
   const tents = useTents();
-  const { activeStep } = useSession();
+  // const { activeStep } = useSession();
 
   const priceTotal = orderTotal(
     tickets.partoutTickets,
@@ -22,13 +23,13 @@ export default function OrderSummary() {
   );
 
   const styles = `md:grid border border-border-form self-start grid-rows-subgrid row-span-full ${
-    activeStep === 3 ? "grid" : "hidden"
+    step === 3 ? "grid" : "hidden"
   }`;
 
   return (
     <section className={styles}>
       <OrderHeader />
-      <OrderOverview {...tickets}>
+      <OrderOverview activeStep={step} {...tickets} {...orderData}>
         <ItemBasket {...tickets} {...tents} />
         <FeesBasket greenFee={orderData?.green_fee} />
       </OrderOverview>
@@ -39,7 +40,7 @@ export default function OrderSummary() {
 
 function OrderHeader() {
   return (
-    <header className="border-b border-border-form grid place-items-end p-8">
+    <header className="cursor-default border-b border-border-form grid place-items-end p-8">
       <h3 className="body-copy font-semibold w-full text-center">
         Order Summary
       </h3>
@@ -47,23 +48,29 @@ function OrderHeader() {
   );
 }
 
-function OrderOverview({ partoutTickets, vipTickets, children }) {
-  const { activeStep } = useSession();
+function OrderOverview({
+  activeStep,
+  reservation_id,
+  partoutTickets,
+  vipTickets,
+  children,
+}) {
   return (
     <article
-      className={`grid grid-rows-[auto_1fr] ${
+      className={`cursor-default grid grid-rows-[auto_1fr] ${
         activeStep !== 1 && "grid-rows-[auto_auto_1fr]"
       } gap-y-2`}
     >
       <div className={activeStep === 3 ? "hidden sm:block" : undefined}>
-        {activeStep !== 1 && <ReservationTimer />}
+        {reservation_id && <ReservationTimer />}
       </div>
-      {!partoutTickets && !vipTickets && (
+      {!partoutTickets && !vipTickets ? (
         <small className="body-copy-small p-6 text-center italic opacity-50">
           No tickets selected.
         </small>
+      ) : (
+        <>{children}</>
       )}
-      {children}
     </article>
   );
 }

@@ -1,105 +1,91 @@
-import BookingWindow from "@/components/checkout/BookingWindow";
+"use client";
+
+// FUNCTIONS || NEXT
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+
+// FUNCTIONS || REACT
+import { useActionState, useEffect, startTransition } from "react";
+
+// COMPONENTS
+import Form from "next/form";
+import Loading, {
+  ProcessingOrder,
+} from "@/app/session/reservation/flow/checkout/loading";
+const BookingWindow = dynamic(
+  () => import("@/components/checkout/BookingWindow"),
+  {
+    loading: () => <Loading />,
+  }
+);
+import {
+  BookingStepOne,
+  BookingStepTwo,
+  BookingStepThree,
+} from "@/components/checkout/FormSteps";
+
+// SERVER ACTION
+import { submitOrder } from "@/app/session/reservation/flow/checkout/actions";
+import { keyEnter } from "@/lib/utils";
+
+// STORE
+import { useSessionActions } from "@/store/SessionStore";
+import { useOrderActions } from "@/store/OrderStore";
+
+// import BookingWindow from ;
 import OrderSummary from "@/components/checkout/OrderSummary";
-import ReservationTimer from "@/components/checkout/ReservationTimer";
-import Button from "@/components/Button";
-import formSteps from "@/data/formsteps";
 
 export default function Page() {
+  // FORM ACTION
+  const initState = { step: 1, success: false, errors: {} };
+  const [state, submit, isPending] = useActionState(submitOrder, initState);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const handler = e.nativeEvent.submitter.name;
+    const formData = new FormData(e.target);
+    if (handler === "back") {
+      formData.append("isGoingBack", true);
+    }
+    startTransition(() => submit(formData));
+  }
+
+  // STORE
+  const { setActiveStep, setReservationId } = useSessionActions();
+  const { setOrderData } = useOrderActions();
+
+  // UPDATE STORES
+  useEffect(() => {
+    setActiveStep(state?.activeStep);
+    setOrderData(state?.orderData);
+    if (state?.activeStep === 2) {
+      setReservationId(state?.orderData?.reservationId);
+    }
+  }, [state?.step]);
+
+  // SUBMISSION REDIRECT
+  const router = useRouter();
+  if (state?.success) {
+    router.push("/session/reservation/success");
+  }
+
+  if (state?.step === 3 && isPending) return <ProcessingOrder />;
+
   return (
-    <main className="grid gap-x-4 grid-rows-[auto_1fr_auto] md:grid-cols-4">
-      <BookingWindow />
-      <OrderSummary />
+    <main>
+      {/* {state?.orderData?.paid && isPending && <ProcessingOrder />} */}
+      <Form
+        onSubmit={handleSubmit}
+        onKeyDown={keyEnter}
+        className="grid gap-x-4 grid-rows-[auto_1fr_auto] md:grid-cols-4 h-full"
+      >
+        <BookingWindow state={state} isPending={isPending}>
+          {state?.step === 1 && <BookingStepOne {...state} />}
+          {state?.step === 2 && <BookingStepTwo {...state} />}
+          {state?.step === 3 && <BookingStepThree {...state} />}
+        </BookingWindow>
+        <OrderSummary {...state} />
+      </Form>
     </main>
-  );
-}
-
-export function FormHeader({ activeStep, isPending }) {
-  return (
-    <>
-      <header
-        className={`border-b border-border-form py-8 px-12 ${
-          activeStep === 3 ? "hidden md:block" : "block"
-        }`}
-      >
-        <ol className="sm:flex justify-center sm:justify-between items-center gap-4 font-semibold cursor-default">
-          {formSteps.map((step, id) => (
-            <FormStepIndicator
-              activeStep={activeStep}
-              {...step}
-              key={id}
-              isPending={isPending}
-            />
-          ))}
-        </ol>
-      </header>
-
-      <div className={activeStep === 1 ? "hidden" : "block sm:hidden"}>
-        {activeStep !== 1 && <ReservationTimer />}
-      </div>
-    </>
-  );
-}
-
-function FormStepIndicator({ activeStep, step, isPending, title }) {
-  return (
-    <>
-      <li
-        key={crypto.randomUUID()}
-        className="hidden first-of-type:hidden sm:block w-10 h-0.5 bg-aztec-800"
-      />
-      <li
-        {...(activeStep >= step && {
-          "data-active": true,
-        })}
-        className={`group body-copy font-semibold flex items-center gap-4 place-content-center sm:justify-between ${
-          activeStep === step
-            ? "text-text-global"
-            : "text-text-global--disabled hidden sm:flex"
-        }`}
-      >
-        <span className="body-copy-small grid place-content-center w-6 sm:w-8 rounded-full aspect-square text-text-global bg-surface-action--disabled group-data-active:bg-surface-action">
-          {step}
-        </span>{" "}
-        {title}
-      </li>
-    </>
-  );
-}
-
-import { CgSpinner } from "react-icons/cg";
-import { PiLockBold } from "react-icons/pi";
-
-export function FormFooter({ activeStep, isPending }) {
-  return (
-    <footer className="self-end flex justify-center sm:justify-end gap-4 items-end">
-      {/* {activeStep > 1 && (
-        <Button
-          variant="primary"
-          size="base"
-          formAction={() => navigateStep(activeStep - 1)}
-          isDisabled={isPending}
-        >
-          Back
-        </Button>
-      )} */}
-      <Button variant="form" size="base" isDisabled={isPending}>
-        {activeStep === 3 ? (
-          <p className="flex gap-2 place-content-center items-center relative">
-            <PiLockBold size="20" />
-            Purchase
-          </p>
-        ) : (
-          <p className="flex gap-2 place-content-center items-center relative">
-            Next{" "}
-            {isPending && (
-              <CgSpinner
-                size="24"
-                className="loaderIcon absolute inset-0 left-4"
-              />
-            )}
-          </p>
-        )}
-      </Button>
-    </footer>
   );
 }
