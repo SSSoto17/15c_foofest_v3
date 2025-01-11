@@ -1,12 +1,13 @@
-"use client";
 import ArtistCard from "@/components/lineup/ArtistCard";
-import ScrollToButton from "./ScrollToButton";
+import Link from "next/link";
+
 import { endpointAPI } from "@/lib/endpoints";
 
-const ByArtist = ({ artists }) => {
+const ByArtist = ({ artists, limit }) => {
+  //Sorting artists
+  // Useing method from the following link
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
   const artistsSortedByName = artists.sort((a, b) => {
-    // Useing method from the following link
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
     const nameA = a.name.toUpperCase();
     const nameB = b.name.toUpperCase();
 
@@ -19,10 +20,17 @@ const ByArtist = ({ artists }) => {
     return 0;
   });
 
+  // For "load more" button
+  const initalLoad = 12;
+  const currentLoad = limit ? limit : (limit = initalLoad);
+  const newLoad = Number(currentLoad) + initalLoad;
+
+  const artistsShowed = artistsSortedByName.slice(0, limit);
+
   return (
-    <section>
+    <section className="grid mb-16">
       <ul className="grid grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] gap-4">
-        {artistsSortedByName.map((artist, i) => (
+        {artistsShowed.map((artist, i) => (
           <ArtistCard
             key={i}
             name={artist.name}
@@ -35,9 +43,16 @@ const ByArtist = ({ artists }) => {
           ></ArtistCard>
         ))}
       </ul>
-      <ScrollToButton scrollFromTop="0" simple={false}>
-        Back to top
-      </ScrollToButton>
+
+      {limit < artists.length && (
+        <Link
+          href={`/lineup/artists?limit=${newLoad}`}
+          scroll={false}
+          className="border-2 border-forest-600 body-copy text-forest-500 hover:text-forest-400 hover:border-forest-500 inline-block px-6 py-3 mt-8 place-self-center"
+        >
+          Load more
+        </Link>
+      )}
     </section>
   );
 };

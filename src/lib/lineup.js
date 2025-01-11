@@ -1,6 +1,4 @@
-// import { endpointAPI } from "./endpoints";
-
-const endpointAPI = process.env.NEXT_PUBLIC_FOO_FEST_API_URL;
+import { endpointAPI } from "./endpoints";
 
 export async function getArtists() {
   const response = await fetch(`${endpointAPI}/bands`, {
