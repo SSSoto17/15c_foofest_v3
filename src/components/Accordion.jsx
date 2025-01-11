@@ -20,7 +20,11 @@ export default function Accordion({
       <summary
         className={`cursor-pointer flex items-center justify-between gap-4 ${variants[variant]}`}
       >
-        <div className="flex items-center gap-4">
+        <div
+          className={`flex items-center gap-4 grow ${
+            variant === "primary" && "justify-between"
+          }`}
+        >
           <MdAdd
             size="2rem"
             className={`duration-300 ease-in-out group-open:rotate-45 ${
