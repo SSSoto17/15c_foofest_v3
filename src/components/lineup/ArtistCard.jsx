@@ -1,32 +1,30 @@
+import { endpointAPI } from "@/lib/endpoints";
 import Image from "next/image";
-// import picture from "../../assets/tester/A_Perfect_Circle_Logo_2011_-_Michael_John_Stinsman_InvisibleStudio_Productions.png";
-import picture from "../../assets/tester/terminalist.jpg";
-// import picture from "../../assets/tester/Tool_logo_2006.svg";
 import Link from "next/link";
 
-const ArtistCard = ({ name, slug, img }) => {
-  // console.log("slug:", slug);
-  console.log("img:", img);
+export default function ArtistCard({ name, slug, logo }) {
+  const img = logo.startsWith("https://")
+    ? logo
+    : `${endpointAPI}/logos/${logo}`;
 
   return (
-    <li>
+    <li
+      style={{ "--url": `url(${img})` }}
+      className="bg-[image:var(--url)] bg-cover grayscale-100 "
+    >
       <Link
         href={`/lineup/artists/single/${slug}`}
-        className="grid aspect-square"
+        className="grid aspect-square bg-gradient-to-t from-black"
       >
-        <Image
+        {/* <Image
           src={img}
-          width="400"
-          height="400"
           alt={`Image of ${name}`}
-          className="grayscale row-start-1 col-start-1 object-cover h-full"
-        ></Image>
-        <h2 className="z-1 heading-4 px-6 py-2 row-start-1 col-start-1 self-end bg-gradient-to-t from-black">
-          {name}
-        </h2>
+          width={400}
+          height={400}
+          className="grayscale object-cover aspect-square col-span-full row-span-full"
+        /> */}
+        <h2 className="z-10 heading-4 px-4 py-2 self-end">{name}</h2>
       </Link>
     </li>
   );
-};
-
-export default ArtistCard;
+}

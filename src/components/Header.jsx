@@ -166,13 +166,13 @@ function WarningEscape() {
             <div className="flex gap-4">
               <button
                 onClick={() => setIsOpen(false)}
-                className="grow cursor-pointer bg-aztec-300 hover:bg-aztec-400 p-2 rounded-sm font-semibold max-w-40"
+                className="grow cursor-pointer body-copy bg-aztec-300 hover:bg-aztec-400 p-2 rounded-sm font-semibold max-w-40"
               >
                 Cancel
               </button>
               <button
                 onClick={handleExit}
-                className="grow cursor-pointer bg-rose-600 hover:bg-rose-500 p-2 rounded-sm font-semibold max-w-40"
+                className="grow cursor-pointer body-copy bg-rose-600 hover:bg-rose-500 p-2 rounded-sm font-semibold max-w-40"
               >
                 Exit
               </button>
