@@ -1,15 +1,25 @@
 "use client";
-import ButtonNav from "./ButtonNav";
+import { useSelectedLayoutSegment } from "next/navigation";
+import Link from "next/link";
 
-const LineupNav = ({ active }) => {
-  const pages = ["artists", "days", "stages"];
+export default function TabGroup() {
+  const currentPage = useSelectedLayoutSegment();
+  const tabs = ["artists", "days", "stages"];
+
   return (
-    <ul className="flex gap-8 uppercase font-semibold justify-center mb-8">
-      {pages.map((page, id) => {
-        return <ButtonNav key={id} label={page} active={active == page} />;
+    <nav className="flex gap-8 uppercase font-semibold justify-center mb-8">
+      {tabs.map((tab, id) => {
+        const isActive = tab === currentPage;
+        return (
+          <Link
+            key={id}
+            href={`/lineup/${tab}`}
+            className={isActive ? "border-b-2 border-forest-700" : null}
+          >
+            {tab}
+          </Link>
+        );
       })}
-    </ul>
+    </nav>
   );
-};
-
-export default LineupNav;
+}

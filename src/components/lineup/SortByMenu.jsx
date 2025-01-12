@@ -2,7 +2,6 @@
 
 // COMPONENTS
 import Form from "next/form";
-import Link from "next/link";
 import {
   Checkbox,
   Disclosure,
@@ -20,8 +19,7 @@ import { useState } from "react";
 // ASSETS
 import { MdArrowRight, MdOutlineCheck } from "react-icons/md";
 
-export default function SortByMenu({ active, genreNames }) {
-  console.log("current filters: ", active);
+export default function Filter({ active, genres }) {
   return (
     <aside className="row-span-full">
       <Disclosure>
@@ -33,7 +31,7 @@ export default function SortByMenu({ active, genreNames }) {
           Filter By Genre
         </DisclosureButton>
         <DisclosurePanel className="grid gap-4 border-2 border-t-0 border-border-global p-4">
-          <FilterList genreNames={genreNames} selected={active} />
+          <FilterList genres={genres} selected={active} />
         </DisclosurePanel>
       </Disclosure>
       {/* <details className="border-2 border-border-global self-start">
@@ -45,14 +43,14 @@ export default function SortByMenu({ active, genreNames }) {
   );
 }
 
-function FilterList({ genreNames, selected }) {
+function FilterList({ genres, selected }) {
   function handleClear() {
     redirect("/lineup/artists");
   }
   return (
     <Form action="/lineup/artists" className="grid gap-4">
       <ul className="grid gap-1">
-        {genreNames.map((genreName, i) => (
+        {genres.map((genreName, i) => (
           <li key={i}>
             <GenreCheckbox
               label={genreName}

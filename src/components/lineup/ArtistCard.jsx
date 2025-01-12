@@ -1,8 +1,12 @@
+"use client";
 import { endpointAPI } from "@/lib/endpoints";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function ArtistCard({ name, slug, logo }) {
+  const path = usePathname();
+  const url = `${path}/single/${slug}`;
   const img = logo.startsWith("https://")
     ? logo
     : `${endpointAPI}/logos/${logo}`;
@@ -13,7 +17,7 @@ export default function ArtistCard({ name, slug, logo }) {
       className="bg-[image:var(--url)] bg-cover grayscale-100 "
     >
       <Link
-        href={`/lineup/artists/single/${slug}`}
+        href={url}
         className="grid aspect-square bg-gradient-to-t from-black"
       >
         {/* <Image
