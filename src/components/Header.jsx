@@ -1,19 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import logo from "../assets/svg/logo_bold.svg";
-import {
-  Dialog,
-  DialogTitle,
-  DialogPanel,
-  Description,
-} from "@headlessui/react";
-import { useState } from "react";
-import { deleteUnpaid } from "@/lib/order";
-import { redirect } from "next/navigation";
 
-export default function Header({ linksActive }) {
+import { useState } from "react";
+
+export default function Header({ children, linksActive }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -23,13 +14,7 @@ export default function Header({ linksActive }) {
       }`}
     >
       <nav className="py-4 flex w-full items-center justify-between">
-        {linksActive ? (
-          <Link href="/">
-            <Image src={logo} alt="FooFest" className="h-16 w-fit" />
-          </Link>
-        ) : (
-          <WarningEscape />
-        )}
+        {children}
         {linksActive && (
           <>
             <ul className="md:flex gap-2 hidden">
@@ -59,13 +44,14 @@ export default function Header({ linksActive }) {
   );
 }
 
-function MobileNav({ setIsOpen, isOpen }) {
+export function MobileNav({ setIsOpen, isOpen, children }) {
   const classes = `-z-10 overscroll-auto w-screen h-screen fixed inset-0 bg-[#171e1b] drop-shadow-main grid items-center justify-around transition-[left] duration-500 ease-in-out ${
     isOpen ? "left-0" : "left-full"
   }`;
   return (
     <nav className={classes}>
-      <menu className=" text-2xl flow-space">
+      <ul className=" text-2xl flow-space">
+        {children}
         <li>
           <Link
             className="py-2 px-6 grid place-content-center uppercase font-semibold"
@@ -88,12 +74,12 @@ function MobileNav({ setIsOpen, isOpen }) {
             Buy Tickets
           </Link>
         </li>
-      </menu>
+      </ul>
     </nav>
   );
 }
 
-function MobileNavIcon({ setIsOpen, isOpen }) {
+export function MobileNavIcon({ setIsOpen, isOpen }) {
   const role = {
     top: `transition-[transform] ${
       isOpen ? "rotate-45 translate-y-1.5" : "-translate-y-0.5"
@@ -123,57 +109,5 @@ function MobileNavIcon({ setIsOpen, isOpen }) {
       <span className={setClasses(role.middle)}></span>
       <span className={setClasses(role.bottom)}></span>
     </button>
-  );
-}
-
-function WarningEscape() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleExit = async () => {
-    await deleteUnpaid();
-    redirect("/");
-  };
-
-  return (
-    <>
-      <button onClick={() => setIsOpen(true)} className="cursor-pointer">
-        <Image src={logo} alt="FooFest" className="h-16 w-fit" />
-      </button>
-      <Dialog
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        className="fixed inset-0 flex items-center justify-center p-4"
-      >
-        <div className="bg-surface-global p-12 border border-border-global max-w-md">
-          <DialogPanel className="grid gap-8">
-            <DialogTitle className="heading-6 text-red-400">
-              Leave Booking Session
-            </DialogTitle>
-            <div className="grid gap-2">
-              <Description className="font-bold">
-                Are you sure you wish to leave?
-              </Description>
-              <p className="text-aztec-300">
-                If you exit the booking session you will lose your reservation.
-              </p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="grow cursor-pointer bg-aztec-300 p-2 rounded-sm font-semibold max-w-40"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleExit}
-                className="grow cursor-pointer bg-rose-600 p-2 rounded-sm font-semibold max-w-40"
-              >
-                Exit
-              </button>
-            </div>
-          </DialogPanel>
-        </div>
-      </Dialog>
-    </>
   );
 }

@@ -1,45 +1,98 @@
-import { MdOutlineCheck } from "react-icons/md";
+"use client";
+
+// COMPONENTS
+import Form from "next/form";
+import {
+  Checkbox,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Field,
+  Label,
+  Button,
+} from "@headlessui/react";
+
+// FUNCTIONS
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
-import { Button, Checkbox, Field, Label } from "@headlessui/react";
-import Link from "next/link";
+// ASSETS
+import { MdArrowRight, MdOutlineCheck } from "react-icons/md";
 
-const SortByMenu = ({ genreNames }) => {
+export default function Filter({ active, genres }) {
   return (
-    <details className="border-2 border-border-global self-start">
-      <summary className="p-4 border-b-2 border-b-border-global heading-4">Filter By Genre</summary>
-      <form action="/lineup/artists" className="grid grid-cols-1">
-        <ul className="p-4">
-          {genreNames.map((genreName, i) => (
-            <li key={i} className="pt-2">
-              <GenreCheckbox label={genreName} />
-            </li>
-          ))}
-        </ul>
-        <div className="place-self-center flex gap-2">
-          <Link href="/lineup/artists" className="cursor-pointer place-self-center border-forest-600 border-2 px-2 py-0.5 rounded-sm mb-4">
-            Clear all
-          </Link>
-
-          <Button type="submit" className="cursor-pointer place-self-center border-forest-600 border-2  bg-forest-600 px-2 py-0.5 rounded-sm mb-4">
-            Apply
-          </Button>
-        </div>
-      </form>
-    </details>
+    <aside className="row-span-full">
+      <Disclosure>
+        <DisclosureButton className="group cursor-pointer flex items-center border-2 border-border-global p-2 heading-6 text-res-base w-full">
+          <MdArrowRight
+            size="32"
+            className="group-data-[open]:rotate-90 transition-all duration-150"
+          />
+          Filter By Genre
+        </DisclosureButton>
+        <DisclosurePanel className="grid gap-4 border-2 border-t-0 border-border-global p-4">
+          <FilterList genres={genres} selected={active} />
+        </DisclosurePanel>
+      </Disclosure>
+      {/* <details className="border-2 border-border-global self-start">
+        <summary className="p-4 border-b-2 border-b-border-global heading-4">
+          Filter By Genre
+        </summary>
+      </details> */}
+    </aside>
   );
-};
+}
 
-export default SortByMenu;
-
-export function GenreCheckbox({ label }) {
-  const [checked, setChecked] = useState(false);
+function FilterList({ genres, selected }) {
+  function handleClear() {
+    redirect("/lineup/artists");
+  }
   return (
-    <Field className="flex items-center gap-3 max-w-xl group hover:cursor-pointer">
-      <Checkbox name="genre" value={label} checked={checked} onChange={setChecked} className="border-2 border-aztec-600 rounded-sm data-checked:border-forest-600 data-checked:bg-forest-600 data-focus:outline-none">
+    <Form action="/lineup/artists" className="grid gap-4">
+      <ul className="grid gap-1">
+        {genres.map((genreName, i) => (
+          <li key={i}>
+            <GenreCheckbox
+              label={genreName}
+              active={selected?.find((genre) => genre === genreName)}
+            />
+          </li>
+        ))}
+      </ul>
+      <footer className="flex justify-between gap-2">
+        <Button
+          type="submit"
+          formAction={handleClear}
+          className="grow cursor-pointer body-copy bg-aztec-400 hover:bg-aztec-500 p-2 rounded-sm font-semibold max-w-40"
+        >
+          Clear all
+        </Button>
+        <Button
+          type="submit"
+          className="grow cursor-pointer body-copy bg-forest-500 hover:bg-forest-600 p-2 rounded-sm font-semibold max-w-40"
+        >
+          Apply
+        </Button>
+      </footer>
+    </Form>
+  );
+}
+
+function GenreCheckbox({ label, active }) {
+  console.log(active);
+  const [checked, setChecked] = useState((active && true) || false);
+  return (
+    <Field className="flex items-center gap-3 max-w-xl group">
+      <Checkbox
+        name="genre"
+        value={label}
+        checked={checked}
+        onChange={setChecked}
+        className="border-2 border-aztec-600 rounded-sm data-checked:border-forest-600 data-checked:bg-forest-600 data-focus:outline-none group-hover:cursor-pointer group-hover:bg-aztec-900"
+      >
         <MdOutlineCheck className={`opacity-0 ${checked && "opacity-100"}`} />
       </Checkbox>
-      <Label className="">{label}</Label>
+      <Label className="group-hover:cursor-pointer">{label}</Label>
     </Field>
   );
 }

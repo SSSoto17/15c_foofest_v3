@@ -12,16 +12,14 @@ export default async function Stages() {
   }));
 
   return (
-    <LineupLayout category="stages">
-      <section className="grid gap-4">
-        {stageNames.map((stage, i) => {
-          return (
-            <Accordion key={i} variant="primary" label={stage} name="stage">
-              <StageSchedule data={stageSchedule[i].days}></StageSchedule>
-            </Accordion>
-          );
-        })}
-      </section>{" "}
-    </LineupLayout>
+    <section className="grid gap-4">
+      {stageNames.map((stage, i) => {
+        return (
+          <Accordion key={i} variant="primary" label={stage} name="stage">
+            <StageSchedule data={stageSchedule[i].days}></StageSchedule>
+          </Accordion>
+        );
+      })}
+    </section>
   );
 }
