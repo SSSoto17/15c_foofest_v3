@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
 
 function Footer() {
   return (
-    <footer className="grid place-content-center py-6 text-aztec-300">
+    <footer className="grid place-content-center row-start-3 py-6 text-aztec-300">
       <small>Copyright © 2024 | All rights reserved</small>
     </footer>
   );
