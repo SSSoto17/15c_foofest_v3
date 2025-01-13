@@ -11,7 +11,7 @@ import { useActionState, useEffect, startTransition } from "react";
 import Form from "next/form";
 import Loading, {
   ProcessingOrder,
-} from "@/app/session/reservation/flow/checkout/loading";
+} from "@/app/(booking)/session/reservation/flow/checkout/loading";
 const BookingWindow = dynamic(
   () => import("@/components/checkout/BookingWindow"),
   {
@@ -28,7 +28,7 @@ import {
 import {
   completeOrder,
   submitOrder,
-} from "@/app/session/reservation/flow/checkout/actions";
+} from "@/app/(booking)/session/reservation/flow/checkout/actions";
 import { keyEnter, Processing } from "@/lib/utils";
 
 // STORE
@@ -59,9 +59,7 @@ export default function Page() {
       startTransition(() => submit(formData));
     }
     if (handler === "purchase") {
-      console.log(state.orderData);
-      formData.append("orderData", state.orderData);
-      console.log("complete order");
+      startTransition(() => submit(formData));
       startTransition(() => complete(formData));
     }
   }
@@ -78,8 +76,6 @@ export default function Page() {
       setReservationId(state?.orderData?.reservationId);
     }
   }, [state?.step]);
-
-  console.log("order completed: ", order?.success);
 
   // SUBMISSION REDIRECT
   if (order?.success === true) {

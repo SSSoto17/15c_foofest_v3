@@ -11,11 +11,10 @@ import {
 } from "@/lib/order";
 import { Processing } from "@/lib/utils";
 
-export async function completeOrder(prev, formData) {
-  const stepThree = await submitStepThree(prev, formData);
-  console.log(stepThree);
+export async function completeOrder() {
+  console.log("completing order");
   await deleteUnpaid();
-  return { success: true, ...stepThree };
+  return { success: true };
 }
 
 export async function submitOrder(prev, formData) {
@@ -37,7 +36,7 @@ export async function submitOrder(prev, formData) {
   if (prev.step === 3) {
     const stepThree = await submitStepThree(prev, formData);
     revalidatePath("/");
-    return { success: false, ...stepThree };
+    return { success: true, ...stepThree };
   }
 }
 
@@ -281,12 +280,10 @@ export async function submitStepTwo(prev, formData) {
 // BOOKING FLOW || STEP THREE
 export async function submitStepThree(prev, formData) {
   const isGoingBack = Boolean(formData.get("isGoingBack"));
-  const orderData = formData;
-
-  console.log(orderData);
+  const orderData = { ...prev.orderData };
 
   // COLLECT CUSTOMER DATA
-  if (formData.get("name") || formData.get("email")) {
+  if (!orderData.name || !orderData.email) {
     orderData.name = formData.get("name");
     orderData.email = formData.get("email");
   }
@@ -303,18 +300,15 @@ export async function submitStepThree(prev, formData) {
   const errors = {};
 
   if (!isGoingBack) {
-    if (formData.get("name") || formData.get("email")) {
-      console.log("checking name and email");
-      if (!orderData.name || orderData.name.length <= 1) {
-        errors.name = "Please enter your name.";
-      }
-      if (
-        !orderData.email ||
-        !orderData.email.includes("@") ||
-        !orderData.email.includes(".")
-      ) {
-        errors.email = "Please enter your email.";
-      }
+    if (!orderData.name || orderData.name.length <= 1) {
+      errors.name = "Please enter your name.";
+    }
+    if (
+      !orderData.email ||
+      !orderData.email.includes("@") ||
+      !orderData.email.includes(".")
+    ) {
+      errors.email = "Please enter your email.";
     }
 
     if (
@@ -345,12 +339,11 @@ export async function submitStepThree(prev, formData) {
   }
 
   // POST TO RESERVATIONS
-  console.log(orderData);
+  console.log("posting: ", orderData);
   await patchOrder(orderData);
   await Processing(600);
 
   if (isGoingBack) {
-    console.log("going back?");
     return {
       ...prev,
       step: isGoingBack ? prev.step - 1 : prev.step,
@@ -361,10 +354,9 @@ export async function submitStepThree(prev, formData) {
   }
 
   // FULLFIL RESERVATION
-  const data = {};
-  data.id = formData.get("reservationId");
-  console.log(data);
-  const response = await postReservation(data);
+  const id = { id: orderData.reservation_id };
+  console.log(id);
+  const response = await postReservation(id);
   if (response.status) {
     await Processing(1000);
     return { success: false };

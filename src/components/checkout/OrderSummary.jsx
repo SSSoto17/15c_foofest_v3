@@ -6,6 +6,8 @@ import { useTickets } from "@/store/TicketStore";
 import { useTents } from "@/store/TentStore";
 import { orderTotal } from "@/lib/utils";
 import { useSession } from "@/store/SessionStore";
+import { SmallLoading } from "@/app/(booking)/session/reservation/flow/checkout/loading";
+import { Input } from "@headlessui/react";
 
 export default function OrderSummary({ step, orderData, isPending }) {
   const tickets = useTickets();
@@ -49,9 +51,6 @@ function OrderHeader() {
     </header>
   );
 }
-
-import { SmallLoading } from "@/app/session/reservation/flow/checkout/loading";
-import { Input } from "@headlessui/react";
 
 function OrderOverview({
   isPending,

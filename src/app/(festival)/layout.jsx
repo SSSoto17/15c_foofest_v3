@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 
 import "@/app/globals.css";
 import { Anton } from "next/font/google";
-const anton = Anton({
+export const anton = Anton({
   weight: "400",
   subsets: ["latin"],
   display: "swap",

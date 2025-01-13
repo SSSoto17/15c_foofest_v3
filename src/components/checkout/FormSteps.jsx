@@ -1,6 +1,6 @@
 "use client";
 
-import { SmallLoading } from "@/app/session/reservation/flow/checkout/loading";
+import { SmallLoading } from "@/app/(booking)/session/reservation/flow/checkout/loading";
 import {
   SelectTickets,
   SelectCampingArea,
