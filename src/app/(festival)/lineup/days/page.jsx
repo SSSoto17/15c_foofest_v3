@@ -7,8 +7,8 @@ export default async function Days() {
   const stages = await getStages();
 
   return (
-    <LineupLayout category="days">
+    <section className="grid gap-4">
       <ByDay data={stages}></ByDay>
-    </LineupLayout>
+    </section>
   );
 }
