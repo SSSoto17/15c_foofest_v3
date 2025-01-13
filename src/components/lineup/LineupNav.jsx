@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export default function TabGroup() {
   const currentPage = useSelectedLayoutSegment();
+  console.log(currentPage);
   const tabs = ["artists", "days", "stages"];
 
   return (
