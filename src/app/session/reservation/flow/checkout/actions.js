@@ -8,9 +8,15 @@ import {
   patchOrder,
   postGuests,
   deleteUnpaid,
-  getOrderById,
 } from "@/lib/order";
 import { Processing } from "@/lib/utils";
+
+export async function completeOrder(prev, formData) {
+  const stepThree = await submitStepThree(prev, formData);
+  console.log(stepThree);
+  await deleteUnpaid();
+  return { success: true, ...stepThree };
+}
 
 export async function submitOrder(prev, formData) {
   // BOOKING FLOW || STEP ONE
@@ -30,8 +36,8 @@ export async function submitOrder(prev, formData) {
   // BOOKING FLOW || STEP THREE
   if (prev.step === 3) {
     const stepThree = await submitStepThree(prev, formData);
-    await deleteUnpaid();
-    return { success: true, ...stepThree };
+    revalidatePath("/");
+    return { success: false, ...stepThree };
   }
 }
 
@@ -40,18 +46,56 @@ export async function submitStepOne(prev, formData) {
   // COLLECT ORDER
   const partoutQuantity = Number(formData.get("partout"));
   const vipQuantity = Number(formData.get("vip"));
+  const tickets = {};
 
-  const partoutTickets = Array(partoutQuantity).fill({
+  const partoutKey = {
     keyName: "partoutName",
     keyEmail: "partoutEmail",
-  });
-  const vipTickets = Array(vipQuantity).fill({
+  };
+  const vipKey = {
     keyName: "vipName",
     keyEmail: "vipEmail",
     vip: true,
-  });
+  };
 
-  const tickets = { keys: [...partoutTickets, ...vipTickets] };
+  const prevPartout = prev?.tickets?.keys?.filter((key) =>
+    key.keyName.includes("partout")
+  );
+  const prevVip = prev?.tickets?.keys?.filter((key) =>
+    key.keyName.includes("vip")
+  );
+
+  if (!prev?.tickets) {
+    const partoutTickets = Array(partoutQuantity).fill(partoutKey);
+    const vipTickets = Array(vipQuantity).fill(vipKey);
+    tickets.keys = [...partoutTickets, ...vipTickets];
+  } else if (prev?.tickets?.keys?.length < partoutQuantity + vipQuantity) {
+    const addSlotsPartout = partoutQuantity - prevPartout.length;
+    const addSlotsVip = vipQuantity - prevVip.length;
+
+    const partoutTickets = [
+      ...prevPartout,
+      ...Array(addSlotsPartout).fill(partoutKey),
+    ];
+    const vipTickets = [...prevVip, ...Array(addSlotsVip).fill(vipKey)];
+    tickets.keys = [...partoutTickets, ...vipTickets];
+    tickets.data = [...prev.tickets.data];
+  } else if (prev?.tickets?.keys?.length > partoutQuantity + vipQuantity) {
+    const partoutTickets = prevPartout.slice(0, partoutQuantity);
+    const vipTickets = prevVip.slice(0, vipQuantity);
+    tickets.keys = [...partoutTickets, ...vipTickets];
+
+    const partoutGuests = prev.tickets.data.filter((guest) => !guest.vip);
+    const vipGuests = prev.tickets.data.filter((guest) => guest.vip);
+
+    tickets.data = [
+      ...partoutGuests.slice(0, partoutQuantity),
+      ...vipGuests.slice(0, vipQuantity),
+    ];
+  } else {
+    tickets.keys = [...prev.tickets.keys];
+    tickets.data = [...prev.tickets.data];
+  }
 
   // PREPARE RESERVATION
   const reservationData = {};
@@ -237,10 +281,12 @@ export async function submitStepTwo(prev, formData) {
 // BOOKING FLOW || STEP THREE
 export async function submitStepThree(prev, formData) {
   const isGoingBack = Boolean(formData.get("isGoingBack"));
-  const orderData = { ...prev.orderData };
+  const orderData = formData;
+
+  console.log(orderData);
 
   // COLLECT CUSTOMER DATA
-  if (!orderData.name || !orderData.email) {
+  if (formData.get("name") || formData.get("email")) {
     orderData.name = formData.get("name");
     orderData.email = formData.get("email");
   }
@@ -257,16 +303,18 @@ export async function submitStepThree(prev, formData) {
   const errors = {};
 
   if (!isGoingBack) {
-    if (!orderData.name || orderData.name.length <= 1) {
-      errors.name = "Please enter your name.";
-    }
-
-    if (
-      !orderData.email ||
-      !orderData.email.includes("@") ||
-      !orderData.email.includes(".")
-    ) {
-      errors.email = "Please enter your email.";
+    if (formData.get("name") || formData.get("email")) {
+      console.log("checking name and email");
+      if (!orderData.name || orderData.name.length <= 1) {
+        errors.name = "Please enter your name.";
+      }
+      if (
+        !orderData.email ||
+        !orderData.email.includes("@") ||
+        !orderData.email.includes(".")
+      ) {
+        errors.email = "Please enter your email.";
+      }
     }
 
     if (
@@ -277,10 +325,15 @@ export async function submitStepThree(prev, formData) {
     ) {
       errors.cardDetails = "Please check your card details.";
     } else {
+      const priceTotal = formData.get("priceTotal");
+      orderData.price_total = Number(priceTotal);
       orderData.paid = true;
     }
 
+    console.log(errors);
+
     if (errors.name || errors.email || errors.cardDetails) {
+      console.log("errors?");
       await Processing(1000);
       return {
         ...prev,
@@ -292,10 +345,12 @@ export async function submitStepThree(prev, formData) {
   }
 
   // POST TO RESERVATIONS
-
+  console.log(orderData);
   await patchOrder(orderData);
+  await Processing(600);
+
   if (isGoingBack) {
-    await Processing(600);
+    console.log("going back?");
     return {
       ...prev,
       step: isGoingBack ? prev.step - 1 : prev.step,
@@ -303,8 +358,20 @@ export async function submitStepThree(prev, formData) {
       errors: {},
       orderData,
     };
+  }
+
+  // FULLFIL RESERVATION
+  const data = {};
+  data.id = formData.get("reservationId");
+  console.log(data);
+  const response = await postReservation(data);
+  if (response.status) {
+    await Processing(1000);
+    return { success: false };
   } else {
+    console.log("responding? ", response);
     await Processing(2000);
+    return { succes: true };
   }
 }
 

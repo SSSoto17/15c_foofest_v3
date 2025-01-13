@@ -7,12 +7,9 @@ import { useTents } from "@/store/TentStore";
 import { orderTotal } from "@/lib/utils";
 import { useSession } from "@/store/SessionStore";
 
-export default function OrderSummary({ step, orderData }) {
-  console.log("reservation: ", orderData);
-  // const { orderData } = useOrder();
+export default function OrderSummary({ step, orderData, isPending }) {
   const tickets = useTickets();
   const tents = useTents();
-  // const { activeStep } = useSession();
 
   const priceTotal = orderTotal(
     tickets.partoutTickets,
@@ -29,7 +26,12 @@ export default function OrderSummary({ step, orderData }) {
   return (
     <section className={styles}>
       <OrderHeader />
-      <OrderOverview activeStep={step} {...tickets} {...orderData}>
+      <OrderOverview
+        isPending={isPending}
+        activeStep={step}
+        {...tickets}
+        {...orderData}
+      >
         <ItemBasket {...tickets} {...tents} />
         <FeesBasket greenFee={orderData?.green_fee} />
       </OrderOverview>
@@ -48,7 +50,11 @@ function OrderHeader() {
   );
 }
 
+import { SmallLoading } from "@/app/session/reservation/flow/checkout/loading";
+import { Input } from "@headlessui/react";
+
 function OrderOverview({
+  isPending,
   activeStep,
   reservation_id,
   partoutTickets,
@@ -64,7 +70,9 @@ function OrderOverview({
       <div className={activeStep === 3 ? "hidden sm:block" : undefined}>
         {reservation_id && <ReservationTimer />}
       </div>
-      {!partoutTickets && !vipTickets ? (
+      {isPending ? (
+        <SmallLoading />
+      ) : !partoutTickets && !vipTickets ? (
         <small className="body-copy-small p-6 text-center italic opacity-50">
           No tickets selected.
         </small>
@@ -77,9 +85,15 @@ function OrderOverview({
 
 function OrderTotal({ total }) {
   return (
-    <footer className="flex justify-between gap-4 p-6 items-center border-t border-border-global font-bold">
+    <footer className="relative flex justify-between gap-4 p-6 items-center border-t border-border-global font-bold">
       <p className="body-copy font-bold uppercase tracking-wider">Total</p>
       <p className="body-copy font-semibold">{total},-</p>
+      <Input
+        name="priceTotal"
+        value={total}
+        readOnly
+        className="absolute opacity-0 text-right body-copy font-semibold"
+      />
     </footer>
   );
 }
@@ -113,13 +127,13 @@ function ItemBasket({ partoutTickets, vipTickets, doubleTents, tripleTents }) {
 
 function Item({ quantity, price, children }) {
   return (
-    <li className="flex justify-between items-end gap-2">
-      <p className="body-copy flex gap-2 items-end">
+    <li className="@container flex justify-between items-end gap-2 body-copy text-base">
+      <p className="flex gap-2 items-end">
         <span className="body-copy-small">{quantity} x</span>
         {children}
         {quantity > 1 && "s"}
       </p>
-      <p className="body-copy">{quantity * price},-</p>
+      <p>{quantity * price},-</p>
     </li>
   );
 }

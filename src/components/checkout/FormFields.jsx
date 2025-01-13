@@ -22,10 +22,10 @@ import { useState, useEffect } from "react";
 // NUMBER SPINNER
 export function QuantitySelector({ data, children }) {
   return (
-    <Field className="peer grid grid-cols-1 sm:grid-cols-[1fr_auto_1rem] items-end justify-between gap-2 sm:gap-4">
-      <Label className="body-copy flex justify-between">
+    <Field className="peer grid grid-cols-[auto_1rem_1fr] @md:grid-cols-[1fr_auto_1.5rem] items-end justify-between gap-2 gap-x-4 @md:gap-4">
+      <Label className="col-span-full @md:col-span-1 body-copy flex justify-between gap-12">
         {children}
-        <span className="body-copy opacity-50 place-self-end mx-8">
+        <span className="body-copy opacity-50 place-self-end mr-8">
           {data.price} DKK
         </span>
       </Label>
@@ -44,8 +44,6 @@ function Spinner({
 }) {
   const [quantity, setQuantity] = useState(currentTotal);
 
-  console.log(error?.includes("select") && overallTotal < 1);
-
   useEffect(() => {
     setTotal(quantity);
   }, [quantity]);
@@ -54,11 +52,13 @@ function Spinner({
     <>
       <div
         className={`input-field input-field-number--focus flex justify-between gap-4 w-fit ${
-          ((error?.includes("select") && overallTotal < 1) ||
-            (error?.includes("limit") && currentTotal > 10) ||
-            error?.includes("space")) &&
+          error &&
           "not-has-data-focus:border-border-global--error bg-surface-input--focus"
         }`}
+        // ((error?.includes("select") && overallTotal < 1) ||
+        //   (error?.includes("limit") && currentTotal > 10) ||
+        //   error?.includes("space")) &&
+        // "not-has-data-focus:border-border-global--error bg-surface-input--focus"
       >
         <Button
           aria-label="Decrease"
@@ -74,7 +74,6 @@ function Spinner({
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
           className="body-copy w-6 text-center data-focus:outline-none data-disabled:text-text-global/15"
-          // disabled={name.includes("tent") && !display}
         />
         <Button
           aria-label="Increase"
@@ -92,7 +91,7 @@ function Spinner({
           onClick={() => setQuantity(0)}
         >
           <MdOutlineDelete
-            className="hover:opacity-50 opacity-25 place-self-center hidden md:block"
+            className="hover:opacity-50 opacity-25 place-self-center hidden @md:block"
             size="24"
           />
         </Button>
@@ -187,7 +186,7 @@ export function CustomerField({
           name={name}
           placeholder={placeholder}
           defaultValue={defaultValue}
-          className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
+          className={`input-field input-field-text--focus cursor-auto body-copy placeholder:text-res-sm ${
             error && errorStyle
           }`}
         />

@@ -31,13 +31,13 @@ export function WarningEscape() {
         onClose={() => setIsOpen(false)}
         className="fixed inset-0 flex items-center justify-center p-4 backdrop-blur-md backdrop-grayscale-25 backdrop-brightness-50 z-50"
       >
-        <Modal />
+        <Modal setIsOpen={setIsOpen} />
       </Dialog>
     </>
   );
 }
 
-function Modal() {
+function Modal({ setIsOpen }) {
   const handleExit = async () => {
     await deleteUnpaid();
     redirect("/");

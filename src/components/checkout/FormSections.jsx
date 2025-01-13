@@ -73,29 +73,36 @@ export function GreenFee({ green_fee }) {
     price: 249,
   };
   return (
-    <Fieldset className="flex items-center gap-2">
+    <Fieldset className="@container flex flex-wrap @lg:flex-nowrap items-center gap-2">
       <CheckField data={data} savedState={green_fee}>
         Green Fee
       </CheckField>
-      <InformationTooltip>
+      <Information>
+        <span className="w-3xs @xl:w-xs block">
+          Support our commitment to sustainability and help reduce the
+          festival's environmental impact.
+        </span>
+      </Information>
+      <p className="body-copy-small opacity-60 grow @lg:hidden">
         Support our commitment to sustainability and help reduce the festival's
         environmental impact.
-      </InformationTooltip>
+      </p>
     </Fieldset>
   );
 }
 
 // BOOKING || STEP TWO
-export function EnterGuestData({ name, keys, data, error }) {
+export function EnterGuestData({ keys, isBuyer, data, error }) {
   return (
     <section
       className={`grid ${keys.length > 1 && "md:grid-cols-2"} gap-4 w-full`}
     >
-      <header className="col-span-full grid gap-2">
+      <header className="col-span-full grid grid-rows-[auto_1rem] gap-2">
         <h2 className="heading-5">Ticket Information</h2>
         <ErrorText>{error?.name || error?.email}</ErrorText>
       </header>
       {keys.map((key, id) => {
+        console.log(data && data[id]);
         return (
           <GuestCard
             key={id}
@@ -104,7 +111,7 @@ export function EnterGuestData({ name, keys, data, error }) {
             number={id + 1}
             single={keys.length === 1}
             error={error}
-            savedState={name ? true : false}
+            savedState={isBuyer}
           />
         );
       })}
@@ -194,7 +201,7 @@ export function SelectTents({ error }) {
 
   return (
     <Accordion label="Tent Setup" variant="secondary" optional>
-      <Fieldset className="grid grid-rows-[1.rem_auto] gap-y-4 ml-12 pt-4">
+      <Fieldset className="@container grid grid-rows-[1.rem_auto] gap-y-4 ml-12 pt-4">
         {error?.tentSetup ? (
           <ErrorText>{error?.tentSetup}</ErrorText>
         ) : (
@@ -218,13 +225,13 @@ export function SelectTents({ error }) {
 }
 
 // BOOKING || STEP THREE
-export function EnterCustomerData({ name, email, error }) {
+export function EnterCustomerData({ name, email, isBuyer, error }) {
   return (
     <Fieldset className="grid gap-y-4 max-w-sm">
       <Legend className="heading-5">Your Information</Legend>
       <CustomerField
         name="name"
-        defaultValue={name}
+        defaultValue={isBuyer ? name : ""}
         placeholder="e.g. John Doe"
         error={error?.name}
         errorIcon
@@ -234,7 +241,7 @@ export function EnterCustomerData({ name, email, error }) {
       </CustomerField>
       <CustomerField
         name="email"
-        defaultValue={email}
+        defaultValue={isBuyer ? email : ""}
         placeholder="johndoe@gmail.com"
         error={error?.email}
         errorIcon
@@ -282,13 +289,13 @@ export function EnterPaymentInfo({ error }) {
       <div className="grid grid-cols-[6fr_1fr] gap-x-2 gap-y-4 max-w-lg">
         <Field className="grid gap-y-2">
           <div className="flex gap-x-2 justify-between items-end">
-            <Label className="body-copy-small">Card Number</Label>
+            <Label className="body-copy-small font-semibold">Card Number</Label>
             <PaymentMethods />
           </div>
           <Input
             name="cardNumber"
             placeholder="Card number"
-            className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
+            className={`cursor-auto input-field input-field-text--focus body-copy placeholder:text-res-sm ${
               error && errorStyle
             }`}
           />
@@ -302,21 +309,23 @@ export function EnterPaymentInfo({ error }) {
         />
         <div className="grid grid-cols-3 gap-x-4">
           <Field className="grid col-span-2 gap-y-2">
-            <Label className="body-copy-small">Expiry Date</Label>
+            <Label className="body-copy-small font-semibold">Expiry Date</Label>
             <Input
               name="cardExp"
               placeholder="( MM / YY )"
-              className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
+              className={`cursor-auto input-field input-field-text--focus body-copy placeholder:text-res-sm ${
                 error && errorStyle
               }`}
             />
           </Field>
           <Field className="grid gap-y-2 relative">
-            <Label className="body-copy-small">Security code</Label>
+            <Label className="body-copy-small font-semibold">
+              Security code
+            </Label>
             <Input
               name="cardSec"
               placeholder="CVC"
-              className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
+              className={`cursor-auto input-field input-field-text--focus body-copy placeholder:text-res-sm ${
                 error && errorStyle
               }`}
             />
@@ -334,11 +343,11 @@ export function EnterPaymentInfo({ error }) {
           size="24"
         />
         <Field className="grid gap-y-2">
-          <Label className="body-copy-small">Card Holder</Label>
+          <Label className="body-copy-small font-semibold">Card Holder</Label>
           <Input
             name="cardHolder"
             placeholder="Name on card"
-            className={`input-field input-field-text--focus body-copy placeholder:text-res-sm ${
+            className={`cursor-auto input-field input-field-text--focus body-copy placeholder:text-res-sm ${
               error && errorStyle
             }`}
           />
@@ -355,27 +364,30 @@ export function EnterPaymentInfo({ error }) {
   );
 }
 
-export function InformationTooltip({ children }) {
+export function Information({ children }) {
   return (
-    <div className="group flex items-center gap-2">
+    <div className="hidden group shrink @lg:flex items-center gap-2">
       <FaRegQuestionCircle
         aria-label="Details"
-        className="cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity duration-150"
-        size="16"
+        className="cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity duration-150 text-xs @sm:text-base"
       />
-      <p className="max-w-96 opacity-0 group-hover:opacity-100 body-copy-small bg-aztec-950 px-2 py-1 body-copy-small text-aztec-300 rounded-xs border border-border-global">
+      <p className="opacity-0 group-hover:opacity-100 body-copy-small px-2 py-1 bg-aztec-950 text-aztec-300 border border-border-global rounded-xs">
         {children}
       </p>
     </div>
-    // <div className="group absolute top-10 right-2">
-    //   <FaRegQuestionCircle
-    //     aria-label="Details"
-    //     className=" cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity duration-150"
-    //     size="16"
-    //   />
-    //   <p className="opacity-0 group-hover:opacity-100 body-copy-small absolute left-8 -top-4 min-w-64 bg-aztec-950 px-2 py-1 body-copy-small text-aztec-300 rounded-xs border border-border-global">
-    //     {children}
-    //   </p>
-    // </div>
+  );
+}
+export function InformationTooltip({ children }) {
+  return (
+    <div className="hidden p-1 absolute top-8 right-1 group @xl:flex items-center gap-2">
+      <FaRegQuestionCircle
+        size="16"
+        aria-label="Details"
+        className="cursor-pointer opacity-50 group-hover:opacity-100 transition-opacity duration-150"
+      />
+      <p className="absolute -top-2 left-10 w-48 @2xl:w-3xs opacity-0 group-hover:opacity-100 body-copy-small px-2 py-1 bg-aztec-950 text-aztec-300 border border-border-global rounded-xs">
+        {children}
+      </p>
+    </div>
   );
 }

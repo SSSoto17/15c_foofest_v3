@@ -1,12 +1,12 @@
 // COMPONENTS
 import { Suspense } from "react";
+import Image from "next/image";
 import Loading from "./loading";
 import Header from "@/components/Header";
+import { WarningEscape } from "@/components/checkout/Header";
 import { anton } from "@/app/(festival)/layout";
-import Image from "next/image";
 
 import logo from "@/assets/svg/logo_bold.svg";
-import { WarningEscape } from "@/components/checkout/Header";
 
 export const metadata = {
   title: "FooFest",

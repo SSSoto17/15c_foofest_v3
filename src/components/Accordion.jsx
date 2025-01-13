@@ -31,13 +31,13 @@ export default function Accordion({
               variant === "primary" && "order-2"
             }`}
           />
-          {label}
+          <span className="grow">{label}</span>
+          {optional && (
+            <span className="body-copy-small font-bold uppercase opacity-50 justify-self-end px-4">
+              Optional
+            </span>
+          )}
         </div>
-        {optional && (
-          <span className="body-copy-small font-bold uppercase opacity-50 justify-self-end -mr-10">
-            Optional
-          </span>
-        )}
       </summary>
       {children}
     </details>

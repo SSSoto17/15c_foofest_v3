@@ -2,7 +2,7 @@
 
 // FUNCTIONS || NEXT
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 // FUNCTIONS || REACT
 import { useActionState, useEffect, startTransition } from "react";
@@ -25,8 +25,11 @@ import {
 } from "@/components/checkout/FormSteps";
 
 // SERVER ACTION
-import { submitOrder } from "@/app/session/reservation/flow/checkout/actions";
-import { keyEnter } from "@/lib/utils";
+import {
+  completeOrder,
+  submitOrder,
+} from "@/app/session/reservation/flow/checkout/actions";
+import { keyEnter, Processing } from "@/lib/utils";
 
 // STORE
 import { useSessionActions } from "@/store/SessionStore";
@@ -39,18 +42,28 @@ export default function Page() {
   // FORM ACTION
   const initState = { step: 1, success: false, errors: {} };
   const [state, submit, isPending] = useActionState(submitOrder, initState);
+  const [order, complete, processingOrder] = useActionState(completeOrder, {
+    success: false,
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
     const handler = e.nativeEvent.submitter.name;
     const formData = new FormData(e.target);
+    console.log(handler);
     if (handler === "back") {
       formData.append("isGoingBack", true);
+      startTransition(() => submit(formData));
     }
-    if (state?.step === 3 && handler === "next") {
-      // <ProcessingOrder />;
+    if (handler === "next") {
+      startTransition(() => submit(formData));
     }
-    startTransition(() => submit(formData));
+    if (handler === "purchase") {
+      console.log(state.orderData);
+      formData.append("orderData", state.orderData);
+      console.log("complete order");
+      startTransition(() => complete(formData));
+    }
   }
 
   // STORE
@@ -66,29 +79,28 @@ export default function Page() {
     }
   }, [state?.step]);
 
-  // SUBMISSION REDIRECT
-  const router = useRouter();
-  if (state?.success) {
-    router.push("/session/reservation/success");
-  }
+  console.log("order completed: ", order?.success);
 
-  // if (state?.step === 3 && isPending) return <ProcessingOrder />;
+  // SUBMISSION REDIRECT
+  if (order?.success === true) {
+    console.log("redirecting");
+    redirect("/session/reservation/success");
+  }
 
   return (
     <main className="mb-6">
-      {/* <ProcessingOrder /> */}
-      {/* {state?.orderData?.paid && isPending && <ProcessingOrder />} */}
+      {(processingOrder || order?.success) && <ProcessingOrder />}
       <Form
         onSubmit={handleSubmit}
         onKeyDown={keyEnter}
-        className="grid gap-x-4 grid-rows-[auto_1fr_auto] md:grid-cols-4 h-full"
+        className="grid gap-x-4 grid-rows-[auto_1fr_auto] md:grid-cols-3 lg:grid-cols-4 h-full"
       >
         <BookingWindow state={state} isPending={isPending}>
           {state?.step === 1 && <BookingStepOne {...state} />}
           {state?.step === 2 && <BookingStepTwo {...state} />}
           {state?.step === 3 && <BookingStepThree {...state} />}
         </BookingWindow>
-        <OrderSummary {...state} />
+        <OrderSummary {...state} isPending={isPending} />
       </Form>
     </main>
   );
