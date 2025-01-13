@@ -10,7 +10,7 @@ export default function Page() {
         </p>
         <p className="body-copy">Meanwhile check out the schedule!</p>
       </div>
-      <Link href="/lineup/artists" className="uppercase px-6 py-3 w-fit border-forest-600 bg-forest-600 font-semibold hover:bg-forest-500 hover:border-forest-500 disabled:bg-forest-800 disabled:border-forest-800 disabled:text-aztec-400">
+      <Link href="/lineup/artists" className="self-start button button-primary button-size-base mt-8">
         Lineup 2025
       </Link>
     </>
