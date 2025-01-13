@@ -146,7 +146,23 @@
   /* BASE COMPONENTS */
 
   .button {
-    @apply w-full max-w-48  cursor-pointer border-2 disabled:cursor-default;
+    @apply text-res-base leading-normal font-semibold w-full max-w-48 cursor-pointer border-2 disabled:cursor-default;
+  }
+
+  .button-primary {
+    @apply border-forest-600  bg-forest-600  hover:bg-forest-500 hover:border-forest-500 disabled:bg-forest-800 disabled:border-forest-800 disabled:text-aztec-400;
+  }
+
+  .button-secondary {
+    @apply text-forest-500 border-2 border-forest-600  hover:text-forest-400 hover:border-forest-500 disabled:text-forest-800 disabled:border-forest-800;
+  }
+
+  .button-size-sm {
+    @apply rounded-sm px-2 py-1;
+  }
+
+  .button-size-base {
+    @apply px-6 py-3;
   }
 
   /* FORM ELEMENTS */
