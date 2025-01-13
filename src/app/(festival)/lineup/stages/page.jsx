@@ -10,6 +10,11 @@ export default async function Stages() {
     name,
     days,
   }));
+  console.log(stages);
+
+  const stage = Array(3).fill({});
+
+  // console.log([{ name: stageSchedule.days.thu }]);
 
   return (
     <section className="grid gap-4">
