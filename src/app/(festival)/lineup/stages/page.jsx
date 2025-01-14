@@ -1,27 +1,28 @@
-import { getStages } from "@/lib/lineup";
-import LineupLayout from "@/components/lineup/LineupLayout";
 import Accordion from "@/components/Accordion";
-import StageSchedule from "@/components/lineup/schedule/StageSchedule";
+import ColSchedule from "@/components/lineup/Table";
+import { stageSchedule, Days } from "@/lib/schedule";
 
-export default async function Stages() {
-  const stages = await getStages();
-  const stageNames = Object.keys(stages);
-  const stageSchedule = Object.entries(stages).map(([name, days]) => ({
-    name,
-    days,
-  }));
-  console.log(stages);
-
-  const stage = Array(3).fill({});
-
-  // console.log([{ name: stageSchedule.days.thu }]);
+export default async function Stages({ searchParams }) {
+  const { stage } = await searchParams;
+  const stages = await stageSchedule();
 
   return (
-    <section className="grid gap-4">
-      {stageNames.map((stage, i) => {
+    <section className="grid gap-4 items-start">
+      {stages.map((obj, i) => {
+        const cols = Days(obj);
         return (
-          <Accordion key={i} variant="primary" label={stage} name="stage">
-            <StageSchedule data={stageSchedule[i].days}></StageSchedule>
+          <Accordion
+            key={i}
+            variant="primary"
+            label={obj.name}
+            name="stage"
+            isOpen={stage === obj.name}
+          >
+            <section className="grid grid-cols-[auto_1fr_1fr_1fr] grid-rows-[2fr_12fr]">
+              {cols.map((day, i) => {
+                return <ColSchedule {...day} key={i} />;
+              })}
+            </section>
           </Accordion>
         );
       })}

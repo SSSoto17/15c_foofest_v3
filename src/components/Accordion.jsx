@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname, useRouter } from "next/navigation";
 import { MdAdd } from "react-icons/md";
 
 export default function Accordion({
@@ -6,18 +9,25 @@ export default function Accordion({
   name,
   optional,
   children,
+  isOpen,
 }) {
   const variants = {
     primary: "heading-4",
     secondary: "body-copy font-bold",
   };
+  const router = useRouter();
+  const path = usePathname();
 
   return (
     <details
+      open={isOpen}
       name={name}
       className="group border-2 border-border-global px-4 py-6 md:p-6"
     >
       <summary
+        onClick={() => {
+          router.push(`${path}?${name}=${label}`, { scroll: false });
+        }}
         className={`cursor-pointer flex items-center justify-between gap-4 ${variants[variant]}`}
       >
         <div
