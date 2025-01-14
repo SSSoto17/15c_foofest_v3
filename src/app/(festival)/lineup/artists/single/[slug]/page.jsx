@@ -1,11 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import { getArtistBySlug, getStages } from "@/lib/lineup";
 import { endpointAPI } from "@/lib/endpoints";
 
-import picture from "@/assets/tester/terminalist.jpg";
-import BackButton from "@/components/lineup/BackButton";
-const endpoint = process.env.NEXT_PUBLIC_FOO_FEST_API_URL;
+import BackButton from "@/components/lineup/Buttons";
 
 export default async function ArtistSingle({ params }) {
   const slug = await params;
@@ -84,7 +81,6 @@ export default async function ArtistSingle({ params }) {
                   <li key={i}>{member}</li>
                 ))}
               </ul>
-              {/* <p>{artist.members}</p> */}
             </article>
           </div>
           <article>
