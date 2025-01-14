@@ -6,7 +6,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 
 export default function Layout({ children }) {
   return (
-    <main className="grid gap-10">
+    <main className="grid gap-10 content-start">
       <section className="grid gap-6">
         <h1 className="heading-title text-center">Lineup</h1>
         <TabNavigation />
