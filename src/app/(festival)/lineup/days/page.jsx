@@ -2,17 +2,25 @@ import Accordion from "@/components/Accordion";
 import ColSchedule from "@/components/lineup/Table";
 import { stageSchedule, Week } from "@/lib/schedule";
 
-export default async function Days() {
+export default async function Days({ searchParams }) {
+  const { day } = await searchParams;
+  console.log(day);
   const schedule = await stageSchedule();
   const days = Week(schedule);
 
   return (
     <section className="grid gap-4">
-      {days.map((day, i) => {
+      {days.map((obj, i) => {
         return (
-          <Accordion key={i} variant="primary" label={day.name} name="days">
+          <Accordion
+            key={i}
+            variant="primary"
+            label={obj.name}
+            name="days"
+            isOpen={day === obj.name}
+          >
             <section className="grid grid-cols-[auto_1fr_1fr_1fr] grid-rows-[2fr_12fr]">
-              {day.cols.map((stage, i) => {
+              {obj.cols.map((stage, i) => {
                 return <ColSchedule {...stage} key={i} />;
               })}
             </section>

@@ -18,7 +18,6 @@ export default function Layout({ children }) {
 
 function TabNavigation() {
   const currentPage = useSelectedLayoutSegment();
-  console.log(currentPage);
   const tabs = ["artists", "days", "stages"];
 
   return (
