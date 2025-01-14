@@ -26,10 +26,16 @@ export function BookingStepOne({ orderData, errors }) {
   );
 }
 
-export function BookingStepTwo({ orderData, errors, tickets }) {
+export function BookingStepTwo({ orderData, errors, tickets, isBuyer }) {
+  console.log(isBuyer);
   return (
     <>
-      <EnterGuestData {...orderData} {...tickets} error={errors?.guests} />
+      <EnterGuestData
+        {...orderData}
+        {...tickets}
+        error={errors?.guests}
+        savedState={isBuyer}
+      />
       <SelectTents error={errors} />
     </>
   );

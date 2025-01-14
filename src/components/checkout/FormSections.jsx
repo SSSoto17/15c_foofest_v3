@@ -129,7 +129,9 @@ function GuestCard({
   single,
   error,
 }) {
+  console.log(savedState);
   const [isBuyer, setIsBuyer] = useState(savedState || false);
+  console.log(isBuyer);
   const checkboxData = {
     name: "isBuyer",
     state: isBuyer,

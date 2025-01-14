@@ -7,7 +7,6 @@ export default function useTentListing(error) {
   const { setDouble, setTriple } = useTentActions();
   const totalTickets = getTotalQuantity("tickets");
   const { totalTentSpaces } = getTotalQuantity("tents");
-  console.log();
 
   const tentListing = [
     {

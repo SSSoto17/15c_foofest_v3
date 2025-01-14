@@ -52,7 +52,9 @@ function Spinner({
     <>
       <div
         className={`input-field input-field-number--focus flex justify-between gap-4 w-fit ${
-          ((error && overallTotal < 1) || (error && overallTotal > 10)) &&
+          (error?.includes("space") ||
+            (error?.includes("select") && overallTotal < 1) ||
+            (error?.includes("limit") && overallTotal > 10)) &&
           "not-has-data-focus:border-border-global--error bg-surface-input--focus"
         }`}
         // ((error?.includes("select") && overallTotal < 1) ||

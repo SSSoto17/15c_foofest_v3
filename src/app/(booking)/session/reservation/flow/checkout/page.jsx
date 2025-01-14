@@ -29,7 +29,7 @@ import {
   completeOrder,
   submitOrder,
 } from "@/app/(booking)/session/reservation/flow/checkout/actions";
-import { keyEnter, Processing } from "@/lib/utils";
+import { keyEnter } from "@/lib/utils";
 
 // STORE
 import { useSessionActions } from "@/store/SessionStore";
@@ -50,7 +50,7 @@ export default function Page() {
     e.preventDefault();
     const handler = e.nativeEvent.submitter.name;
     const formData = new FormData(e.target);
-    console.log(handler);
+
     if (handler === "back") {
       formData.append("isGoingBack", true);
       startTransition(() => submit(formData));
@@ -68,14 +68,16 @@ export default function Page() {
   const { setActiveStep, setReservationId } = useSessionActions();
   const { setOrderData } = useOrderActions();
 
+  console.log(state);
+
   // UPDATE STORES
-  useEffect(() => {
-    setActiveStep(state?.activeStep);
-    setOrderData(state?.orderData);
-    if (state?.activeStep === 2) {
-      setReservationId(state?.orderData?.reservationId);
-    }
-  }, [state?.step]);
+  // useEffect(() => {
+  //   setActiveStep(state?.activeStep);
+  //   setOrderData(state?.orderData);
+  //   if (state?.activeStep === 2) {
+  //     setReservationId(state?.orderData?.reservationId);
+  //   }
+  // }, [state?.step]);
 
   // SUBMISSION REDIRECT
   if (order?.success === true) {

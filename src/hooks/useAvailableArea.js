@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { getTotalQuantity } from "@/lib/utils";
 
 export default function useAvailableArea(data, init) {
-  console.log(init);
   // TICKET QUANTITY IN BASKET
   const ticketQuantity = getTotalQuantity("tickets");
 
