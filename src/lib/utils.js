@@ -13,8 +13,7 @@ export function keyEnter(e) {
 
 export function getTotalQuantity(type) {
   const { partoutTickets, vipTickets } = useTickets();
-  const { doubleTents, doubleTentSpaces, tripleTents, tripleTentSpaces } =
-    useTents();
+  const { doubleTents, doubleTentSpaces, tripleTents, tripleTentSpaces } = useTents();
 
   const totalTickets = partoutTickets + vipTickets;
   const totalTents = doubleTents + tripleTents;
