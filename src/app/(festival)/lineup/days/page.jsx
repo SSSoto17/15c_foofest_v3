@@ -4,7 +4,6 @@ import { stageSchedule, Week } from "@/lib/schedule";
 
 export default async function Days({ searchParams }) {
   const { day } = await searchParams;
-  console.log(day);
   const schedule = await stageSchedule();
   const days = Week(schedule);
 
@@ -16,7 +15,7 @@ export default async function Days({ searchParams }) {
             key={i}
             variant="primary"
             label={obj.name}
-            name="days"
+            name="day"
             isOpen={day === obj.name}
           >
             <section className="grid grid-cols-[auto_1fr_1fr_1fr] grid-rows-[2fr_12fr]">

@@ -1,6 +1,6 @@
 "use client";
-import { redirect, usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+
+import { usePathname, useRouter } from "next/navigation";
 import { MdAdd } from "react-icons/md";
 
 export default function Accordion({
@@ -17,14 +17,6 @@ export default function Accordion({
   };
   const router = useRouter();
   const path = usePathname();
-  // const [isOpen, setIsOpen] = useState(false);
-  function handleClick(e) {
-    const target = e.target;
-    console.log(target);
-    router.push(`${path}?day=${label}`, { scroll: false });
-
-    // redirect(`${path}?day=${label}`, { scroll: false });
-  }
 
   return (
     <details
@@ -33,7 +25,9 @@ export default function Accordion({
       className="group border-2 border-border-global px-4 py-6 md:p-6"
     >
       <summary
-        onClick={handleClick}
+        onClick={() => {
+          router.push(`${path}?${name}=${label}`, { scroll: false });
+        }}
         className={`cursor-pointer flex items-center justify-between gap-4 ${variants[variant]}`}
       >
         <div
