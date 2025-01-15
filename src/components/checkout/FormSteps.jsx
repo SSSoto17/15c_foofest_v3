@@ -27,7 +27,6 @@ export function BookingStepOne({ orderData, errors }) {
 }
 
 export function BookingStepTwo({ orderData, errors, tickets, isBuyer }) {
-  console.log("on step two", isBuyer);
   return (
     <>
       <EnterGuestData
