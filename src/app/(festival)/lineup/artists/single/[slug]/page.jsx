@@ -193,5 +193,4 @@ export default async function ArtistSingle({ params }) {
         </article>
       </section>
     </main>
-  );
-}
+  )}
