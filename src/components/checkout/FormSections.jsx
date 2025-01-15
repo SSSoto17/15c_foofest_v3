@@ -102,7 +102,7 @@ export function EnterGuestData({ keys, isBuyer, data, error }) {
         <ErrorText>{error?.name || error?.email}</ErrorText>
       </header>
       {keys.map((key, id) => {
-        console.log(data && data[id]);
+        // console.log(data && data[id]);
         return (
           <GuestCard
             key={id}
@@ -111,7 +111,7 @@ export function EnterGuestData({ keys, isBuyer, data, error }) {
             number={id + 1}
             single={keys.length === 1}
             error={error}
-            savedState={isBuyer}
+            state={isBuyer}
           />
         );
       })}
@@ -120,7 +120,6 @@ export function EnterGuestData({ keys, isBuyer, data, error }) {
 }
 
 function GuestCard({
-  savedState,
   keyName,
   keyEmail,
   vip,
@@ -128,10 +127,10 @@ function GuestCard({
   number,
   single,
   error,
+  state,
 }) {
-  console.log(savedState);
-  const [isBuyer, setIsBuyer] = useState(savedState || false);
-  console.log(isBuyer);
+  // console.log(savedState);
+  const [isBuyer, setIsBuyer] = useState(state || false);
   const checkboxData = {
     name: "isBuyer",
     state: isBuyer,
@@ -282,6 +281,7 @@ function PaymentMethods() {
 export function EnterPaymentInfo({ error }) {
   const errorStyle =
     "not-data-focus:border-border-global--error bg-surface-input--focus";
+
   return (
     <Fieldset className="grid gap-y-6">
       <Legend className="heading-5 flex justify-between max-w-md">
@@ -296,6 +296,7 @@ export function EnterPaymentInfo({ error }) {
           </div>
           <Input
             name="cardNumber"
+            type="number"
             placeholder="Card number"
             className={`cursor-auto input-field input-field-text--focus body-copy placeholder:text-res-sm ${
               error && errorStyle

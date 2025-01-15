@@ -1,11 +1,9 @@
 "use client";
 
-import { useOrder } from "@/store/OrderStore";
 import ReservationTimer from "./ReservationTimer";
 import { useTickets } from "@/store/TicketStore";
 import { useTents } from "@/store/TentStore";
 import { orderTotal } from "@/lib/utils";
-import { useSession } from "@/store/SessionStore";
 import { SmallLoading } from "@/app/(booking)/session/reservation/flow/checkout/loading";
 import { Input } from "@headlessui/react";
 

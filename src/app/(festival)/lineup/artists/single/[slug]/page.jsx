@@ -1,9 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { getArtistBySlug, getArtists, getStages } from "@/lib/lineup";
 import { endpointAPI } from "@/lib/endpoints";
-
-import BackButton from "@/components/lineup/BackButton";
+import { BackButton } from "@/components/lineup/Buttons";
 
 export async function generateStaticParams() {
   const artists = await getArtists();
@@ -15,11 +13,12 @@ export async function generateStaticParams() {
 
 export default async function ArtistSingle({ params }) {
   const { slug } = await params;
-  const artist = await getArtistBySlug(slug);
+  const { name, genre, members, bio, logo, logoCredits } =
+    await getArtistBySlug(slug);
 
-  const img = artist.logo.startsWith("https://")
-    ? artist.logo
-    : `${endpointAPI}/logos/${artist.logo}`;
+  const img = logo.startsWith("https://")
+    ? logo
+    : `${endpointAPI}/logos/${logo}`;
 
   // SCHEDULE RECONFIGURATION
   const schedule = await getStages();
@@ -119,26 +118,26 @@ export default async function ArtistSingle({ params }) {
   const days = [mon, tue, wed, thu, fri, sat, sun];
 
   const daySchedule = days.find((day) =>
-    day.acts.find((act) => act.act === artist.name)
+    day.acts.find((act) => act.act === name)
   );
 
   const dayPlaying = daySchedule.day;
-  const actPlaying = daySchedule.acts.find((act) => act.act === artist.name);
+  const actPlaying = daySchedule.acts.find((act) => act.act === name);
 
   return (
     <main className="my-8">
-      <BackButton></BackButton>
+      <BackButton />
 
       <section className="grid md:grid-cols-2 gap-10">
         <div>
           <Image
-            src={artistImg}
-            alt={`Image of ${artist.name}`}
+            src={img}
+            alt={`Image of ${name}`}
             width={400}
             height={400}
             className="h-full w-full object-cover"
-          ></Image>
-          {artist.logoCredits && (
+          />
+          {logoCredits && (
             <small className="mt-2 inline-block body-copy-small text-aztec-300">
               Photo by Johan von Bülow
             </small>
@@ -160,16 +159,16 @@ export default async function ArtistSingle({ params }) {
               </span>
             )}
           </h1>
-          <h2 className="heading-2 my-6">{artist.name}</h2>
+          <h2 className="heading-2 my-6">{name}</h2>
           <div className="grid grid-cols-2 pb-8">
             <article>
               <h3 className="heading-7 text-for">Genre</h3>
-              <p>{artist.genre}</p>
+              <p>{genre}</p>
             </article>
             <article>
               <h3 className="heading-7">Members</h3>
               <ul className="flex flex-wrap gap-x-3">
-                {artist.members.map((member, i) => (
+                {members.map((member, i) => (
                   <li key={i}>{member}</li>
                 ))}
               </ul>
@@ -177,7 +176,7 @@ export default async function ArtistSingle({ params }) {
           </div>
           <article>
             <h3 className="heading-7">About</h3>
-            <p>{artist.bio}</p>
+            <p>{bio}</p>
           </article>
         </article>
       </section>

@@ -79,8 +79,16 @@
   /* COLOR | SEMANTIC TOKENS | FORMS */
   --color-border-form: var(--color-border-global);
   --color-text-input: var(--color-text-global);
-  --color-surface-input: color-mix(in oklch, var(--color-aztec-900) 50%, transparent);
-  --color-surface-input--error: color-mix(in oklch, var(--color-aztec-900) 75%, transparent);
+  --color-surface-input: color-mix(
+    in oklch,
+    var(--color-aztec-900) 50%,
+    transparent
+  );
+  --color-surface-input--error: color-mix(
+    in oklch,
+    var(--color-aztec-900) 75%,
+    transparent
+  );
   --color-surface-input--focus: var(--color-aztec-900);
   --color-border-input: var(--color-aztec-900);
   --color-border-input--focus: var(--color-aztec-600);
@@ -97,42 +105,42 @@
   /* TEXT STYLES */
 
   .heading-title {
-    @apply text-res-6xl leading-tight	 font-display font-normal uppercase cursor-default;
+    @apply text-res-6xl leading-tight	 font-display font-normal uppercase;
   }
   .heading-1 {
-    @apply text-res-5xl leading-tight	 font-display font-normal cursor-default;
+    @apply text-res-5xl leading-tight	 font-display font-normal;
   }
   .heading-2 {
-    @apply text-res-4xl leading-tight	 font-display font-normal cursor-default;
+    @apply text-res-4xl leading-tight	 font-display font-normal;
   }
   .heading-3 {
-    @apply text-res-3xl leading-tight	 font-display font-normal cursor-default;
+    @apply text-res-3xl leading-tight	 font-display font-normal;
   }
 
   .heading-4 {
-    @apply text-res-xl leading-tight tracking-wide	font-display font-bold uppercase cursor-default;
+    @apply text-res-xl leading-tight tracking-wide	font-display font-bold uppercase;
   }
   .heading-5 {
-    @apply text-res-xl leading-tight font-semibold cursor-default;
+    @apply text-res-xl leading-tight font-semibold;
   }
 
   .heading-6 {
-    @apply text-res-lg leading-tight font-bold uppercase cursor-default;
+    @apply text-res-lg leading-tight font-bold uppercase;
   }
 
   .heading-7 {
-    @apply leading-tight font-bold uppercase text-text-heading cursor-default;
+    @apply leading-tight font-bold uppercase text-text-heading;
   }
   .heading-tagline {
-    @apply text-res-lg leading-tight uppercase text-text-heading cursor-default;
+    @apply text-res-lg leading-tight uppercase text-text-heading;
   }
 
   .body-copy {
-    @apply text-res-base leading-normal font-normal max-w-prose cursor-default;
+    @apply text-res-base leading-normal font-normal max-w-prose;
   }
 
   .body-copy-small {
-    @apply text-res-sm leading-normal font-normal cursor-default;
+    @apply text-res-sm leading-normal font-normal;
   }
 
   /* BASE COMPONENTS */
@@ -180,7 +188,8 @@ body {
   grid-template-columns: minmax(1rem, 1fr) minmax(0, 1200px) minmax(1rem, 1fr);
   min-height: 100svh;
   overflow-x: clip;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 
   > * {
     grid-column: 2;

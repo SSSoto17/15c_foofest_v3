@@ -12,7 +12,7 @@ export default function ReservationTimer() {
       <small className="body-copy-small leading-tight">
         Time to complete reservation
       </small>
-      <CountDown seconds={60 * 10} />
+      <CountDown seconds={60 * 5} />
     </div>
   );
 }

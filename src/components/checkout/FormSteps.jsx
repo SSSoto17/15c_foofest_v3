@@ -27,14 +27,14 @@ export function BookingStepOne({ orderData, errors }) {
 }
 
 export function BookingStepTwo({ orderData, errors, tickets, isBuyer }) {
-  console.log(isBuyer);
+  console.log("on step two", isBuyer);
   return (
     <>
       <EnterGuestData
         {...orderData}
         {...tickets}
         error={errors?.guests}
-        savedState={isBuyer}
+        isBuyer={isBuyer}
       />
       <SelectTents error={errors} />
     </>
@@ -42,7 +42,6 @@ export function BookingStepTwo({ orderData, errors, tickets, isBuyer }) {
 }
 
 export function BookingStepThree({ errors, isBuyer, orderData }) {
-  console.log(isBuyer);
   return (
     <>
       {!isBuyer && <EnterCustomerData {...orderData} error={errors} />}

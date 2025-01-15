@@ -2,10 +2,10 @@
 
 // FUNCTIONS || NEXT
 import dynamic from "next/dynamic";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 // FUNCTIONS || REACT
-import { useActionState, useEffect, startTransition } from "react";
+import { useActionState, startTransition } from "react";
 
 // COMPONENTS
 import Form from "next/form";
@@ -23,6 +23,7 @@ import {
   BookingStepTwo,
   BookingStepThree,
 } from "@/components/checkout/FormSteps";
+import OrderSummary from "@/components/checkout/OrderSummary";
 
 // SERVER ACTION
 import {
@@ -30,13 +31,6 @@ import {
   submitOrder,
 } from "@/app/(booking)/session/reservation/flow/checkout/actions";
 import { keyEnter } from "@/lib/utils";
-
-// STORE
-import { useSessionActions } from "@/store/SessionStore";
-import { useOrderActions } from "@/store/OrderStore";
-
-// import BookingWindow from ;
-import OrderSummary from "@/components/checkout/OrderSummary";
 
 export default function Page() {
   // FORM ACTION
@@ -64,24 +58,8 @@ export default function Page() {
     }
   }
 
-  // STORE
-  const { setActiveStep, setReservationId } = useSessionActions();
-  const { setOrderData } = useOrderActions();
-
-  console.log(state);
-
-  // UPDATE STORES
-  // useEffect(() => {
-  //   setActiveStep(state?.activeStep);
-  //   setOrderData(state?.orderData);
-  //   if (state?.activeStep === 2) {
-  //     setReservationId(state?.orderData?.reservationId);
-  //   }
-  // }, [state?.step]);
-
   // SUBMISSION REDIRECT
   if (order?.success === true) {
-    console.log("redirecting");
     redirect("/session/reservation/success");
   }
 
