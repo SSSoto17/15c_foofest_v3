@@ -18,6 +18,7 @@ import { useState } from "react";
 
 // ASSETS
 import { MdArrowRight, MdOutlineCheck } from "react-icons/md";
+import { revalidatePath } from "next/cache";
 
 export default function Filter({ active, genres }) {
   return (

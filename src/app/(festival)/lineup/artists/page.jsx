@@ -8,12 +8,29 @@ import { getArtists } from "@/lib/lineup";
 
 async function artistData(genre, limit) {
   let artists = await getArtists();
+  // console.log(genre);
+  // console.log(
+  //   artists.filter((artist) => {
+  //     return artist.genre === "Funk";
+  //   })
+  // );
 
-  if (genre) {
-    artists.filter((artist) => artist.genre === genre);
+  if (genre.length > 1) {
+    const filtered = artists.filter((artist) => artist.genre === genre[2]);
+    // artists = genre.map((obj) => {
+    //   artists.filter((artist) => {
+    //     return artist.genre === obj;
+    //   });
+    // });
+    return filtered;
   }
 
-  return artists.sort((a, b) => a.name.localeCompare(b.name)).slice(0, limit);
+  artists = filtered;
+  console.log("HEJ");
+
+  console.log("MUSIC ", artists);
+
+  return artists.sort((a, b) => a.name.localeCompare(b.name)).slice(0, 12);
 }
 
 async function genreData() {
@@ -26,7 +43,7 @@ async function genreData() {
 export default async function Page({ searchParams }) {
   const { genre, limit } = await searchParams;
   const genres = await genreData();
-  let artists = await artistData(genre, limit || 12);
+  let artists = await artistData(genre, limit);
 
   console.log(artists);
 

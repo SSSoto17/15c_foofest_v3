@@ -1,10 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import { getArtistBySlug, getArtists, getStages } from "@/lib/lineup";
 import { endpointAPI } from "@/lib/endpoints";
 
-import BackButton from "@/components/lineup/BackButton";
-
+import { BackButton } from "@/components/lineup/Buttons";
 export async function generateStaticParams() {
   const artists = await getArtists();
 
