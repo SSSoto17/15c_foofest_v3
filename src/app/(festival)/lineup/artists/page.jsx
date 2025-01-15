@@ -6,20 +6,36 @@ import { ScrollToButton } from "@/components/lineup/Buttons";
 // FUNCTIONS
 import { getArtists } from "@/lib/lineup";
 
-async function artistData(genre) {
-  let artists = await getArtists();
+async function getArtistData(genre, limit) {
+  const data = await getArtists();
+  const artistsData = {
+    totalArtists: data.length,
+    artists: data.sort((a, b) => a.name.localeCompare(b.name)),
+  };
+
+  console.log(limit);
 
   if (Array.isArray(genre)) {
-    artists = genre.flatMap((obj) =>
-      artists.filter((artist) => artist.genre === obj)
+    artistsData.artists = genre.flatMap((obj) =>
+      artistsData.artists.filter((artist) => artist.genre === obj)
     );
-
-    return artists.sort((a, b) => a.name.localeCompare(b.name));
   } else if (genre) {
-    artists = artists.filter((artist) => artist.genre === genre);
+    artistsData.artists = artistsData.artists.filter(
+      (artist) => artist.genre === genre
+    );
   }
 
-  return artists.sort((a, b) => a.name.localeCompare(b.name));
+  if (limit) {
+    artistsData.artists.slice(0, limit);
+  } else {
+    artistsData.artists.slice(0, 12);
+  }
+
+  console.log(artistsData.artists.length);
+
+  console.log(limit);
+
+  return artistsData;
 }
 
 async function genreData() {
@@ -32,9 +48,12 @@ async function genreData() {
 export default async function Page({ searchParams }) {
   const { genre, limit } = await searchParams;
   const genres = await genreData();
-  let artists = await artistData(genre);
+  const artistData = await getArtistData(genre, limit || 12);
 
-  artists = artists.slice(0, limit || 12);
+  // LOAD MORE
+  // const  =
+
+  // artists = artists.slice(0, limit || 12);
 
   return (
     <section className="grid sm:grid-cols-4 gap-4">
@@ -46,7 +65,7 @@ export default async function Page({ searchParams }) {
             console.log(filter);
             return (
               <FilterGroup key={id} filter={filter}>
-                {artists
+                {artistData.artists
                   .filter((artist) => artist.genre === filter)
                   .map((artist, id) => {
                     return <ArtistCard key={id} {...artist} />;
@@ -56,17 +75,19 @@ export default async function Page({ searchParams }) {
           })
         ) : genre ? (
           <FilterGroup filter={genre}>
-            {artists
+            {artistData.artists
               .filter((artist) => artist.genre === genre)
               .map((artist, id) => {
                 return <ArtistCard key={id} {...artist} />;
               })}
           </FilterGroup>
         ) : (
-          artists.map((artist, id) => <ArtistCard key={id} {...artist} />)
+          artistData.artists.map((artist, id) => (
+            <ArtistCard key={id} {...artist} />
+          ))
         )}
       </ul>
-      <footer className="sm:col-start-2 sm:col-span-3 grid place-content-center">
+      {/* <footer className="sm:col-start-2 sm:col-span-3 grid place-content-center">
         {(!limit || limit < artists.length) && (
           <Link
             href={`/lineup/artists?limit=${Number(limit) + 12 || 24}`}
@@ -77,7 +98,7 @@ export default async function Page({ searchParams }) {
             Load more
           </Link>
         )}
-      </footer>
+      </footer> */}
       {/* <Link
         href={`/lineup/artists?limit=${Number(limit) + 12 || 24}${
           genre ? `&genre=${genre.join("&genre=")}` : ""
