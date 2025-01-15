@@ -121,16 +121,13 @@ export default async function ArtistSingle({ params }) {
   const daySchedule = days.find((day) =>
     day.acts.find((act) => act.act === artist.name)
   );
-  const daySchedule = days.find((day) =>
-    day.acts.find((act) => act.act === artist.name)
-  );
 
   const dayPlaying = daySchedule.day;
   const actPlaying = daySchedule.acts.find((act) => act.act === artist.name);
 
   return (
     <main className="my-8">
-      <BackButton />
+      <BackButton></BackButton>
 
       <section className="grid md:grid-cols-2 gap-10">
         <div>
@@ -152,19 +149,11 @@ export default async function ArtistSingle({ params }) {
             className={`relative heading-tagline px-4 py-2 ${
               !actPlaying.cancelled && "border-2"
             } inline-block`}
-          />
-          <h1
-            className={`relative heading-tagline px-4 py-2 ${
-              !actPlaying.cancelled && "border-2"
-            } inline-block`}
           >
             {dayPlaying}
             <span className="ml-8">{actPlaying.start}</span>
             {actPlaying.cancelled && (
               <span>
-                <p className="absolute left-16 -bottom-2 col-start-1 -rotate-12 text-res-xs sm:text-res-sm uppercase border-2 border-gold-600 text-gold-600 inline-block px-1 sm:px-2 sm:py-0.5">
-                  Cancelled
-                </p>
                 <p className="absolute left-16 -bottom-2 col-start-1 -rotate-12 text-res-xs sm:text-res-sm uppercase border-2 border-gold-600 text-gold-600 inline-block px-1 sm:px-2 sm:py-0.5">
                   Cancelled
                 </p>
