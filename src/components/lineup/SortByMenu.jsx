@@ -10,6 +10,7 @@ import {
   Field,
   Label,
   Button,
+  CloseButton,
 } from "@headlessui/react";
 
 // FUNCTIONS
@@ -18,11 +19,10 @@ import { useState } from "react";
 
 // ASSETS
 import { MdArrowRight, MdOutlineCheck } from "react-icons/md";
-import { revalidatePath } from "next/cache";
 
 export default function Filter({ active, genres }) {
   return (
-    <aside className="row-span-full">
+    <aside className="sm:row-span-full">
       <Disclosure>
         <DisclosureButton className="group cursor-pointer flex items-center border-2 border-border-global p-2 heading-6 text-res-base w-full">
           <MdArrowRight
@@ -35,52 +35,51 @@ export default function Filter({ active, genres }) {
           <FilterList genres={genres} selected={active} />
         </DisclosurePanel>
       </Disclosure>
-      {/* <details className="border-2 border-border-global self-start">
-        <summary className="p-4 border-b-2 border-b-border-global heading-4">
-          Filter By Genre
-        </summary>
-      </details> */}
     </aside>
   );
 }
 
 function FilterList({ genres, selected }) {
-  function handleClear() {
-    redirect("/lineup/artists");
-  }
   return (
     <Form action="/lineup/artists" className="grid gap-4">
       <ul className="grid gap-1">
-        {genres.map((genreName, i) => (
-          <li key={i}>
-            <GenreCheckbox
-              label={genreName}
-              active={selected?.find((genre) => genre === genreName)}
-            />
-          </li>
-        ))}
+        {genres.map((genreName, i) => {
+          const isActive = Array.isArray(selected)
+            ? selected?.find((genre) => genre === genreName)
+            : selected === genreName;
+          return (
+            <li key={i}>
+              <GenreCheckbox label={genreName} active={isActive} />
+            </li>
+          );
+        })}
       </ul>
-      <footer className="flex justify-between gap-2">
-        <Button
-          type="submit"
-          formAction={handleClear}
-          className="grow cursor-pointer body-copy bg-aztec-400 hover:bg-aztec-500 p-2 rounded-sm font-semibold max-w-40"
-        >
-          Clear all
-        </Button>
-        <Button
-          type="submit"
-          className="grow cursor-pointer body-copy bg-forest-500 hover:bg-forest-600 p-2 rounded-sm font-semibold max-w-40"
-        >
-          Apply
-        </Button>
-      </footer>
+      <FilterButtons />
     </Form>
   );
 }
 
+function FilterButtons() {
+  function handleClear() {
+    redirect("/lineup/artists");
+  }
+  return (
+    <footer className="flex justify-end gap-2">
+      <Button
+        type="submit"
+        formAction={handleClear}
+        className="button button-size-sm button-tertiary--disabled"
+      >
+        Clear all
+      </Button>
+      <Button type="submit" className="button button-size-sm button-tertiary">
+        Apply
+      </Button>
+    </footer>
+  );
+}
+
 function GenreCheckbox({ label, active }) {
-  console.log(active);
   const [checked, setChecked] = useState((active && true) || false);
   return (
     <Field className="flex items-center gap-3 max-w-xl group">

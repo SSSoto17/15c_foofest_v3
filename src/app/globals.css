@@ -79,8 +79,16 @@
   /* COLOR | SEMANTIC TOKENS | FORMS */
   --color-border-form: var(--color-border-global);
   --color-text-input: var(--color-text-global);
-  --color-surface-input: color-mix(in oklch, var(--color-aztec-900) 50%, transparent);
-  --color-surface-input--error: color-mix(in oklch, var(--color-aztec-900) 75%, transparent);
+  --color-surface-input: color-mix(
+    in oklch,
+    var(--color-aztec-900) 50%,
+    transparent
+  );
+  --color-surface-input--error: color-mix(
+    in oklch,
+    var(--color-aztec-900) 75%,
+    transparent
+  );
   --color-surface-input--focus: var(--color-aztec-900);
   --color-border-input: var(--color-aztec-900);
   --color-border-input--focus: var(--color-aztec-600);
@@ -138,19 +146,29 @@
   /* BASE COMPONENTS */
 
   .button {
-    @apply text-res-base leading-normal font-semibold w-full max-w-48 cursor-pointer border-2 disabled:cursor-default grid place-content-center;
+    @apply text-res-base leading-normal font-semibold w-full max-w-48 grow cursor-pointer disabled:cursor-default grid place-content-center;
   }
 
   .button-primary {
-    @apply border-forest-600  bg-forest-600  hover:bg-forest-500 hover:border-forest-500 disabled:bg-forest-800 disabled:border-forest-800 disabled:text-aztec-400;
+    @apply border-2 border-forest-600  bg-forest-600  hover:bg-forest-500 hover:border-forest-500 disabled:bg-forest-800 disabled:border-forest-800 disabled:text-aztec-400;
   }
 
   .button-secondary {
-    @apply text-forest-500 border-2 border-forest-600  hover:text-forest-400 hover:border-forest-500 disabled:text-forest-800 disabled:border-forest-800;
+    @apply border-2 text-forest-500 border-2 border-forest-600  hover:text-forest-400 hover:border-forest-500 disabled:text-forest-800 disabled:border-forest-800;
+  }
+
+  .button-tertiary {
+    @apply bg-forest-500 hover:bg-forest-600;
+  }
+  .button-tertiary--disabled {
+    @apply bg-aztec-300 hover:bg-aztec-400;
+  }
+  .button-tertiary--error {
+    @apply bg-rose-600 hover:bg-rose-500;
   }
 
   .button-size-sm {
-    @apply rounded-sm px-2 py-1;
+    @apply rounded-sm p-2 max-w-40 font-semibold;
   }
 
   .button-size-base {
@@ -180,7 +198,8 @@ body {
   grid-template-columns: minmax(1rem, 1fr) minmax(0, 1200px) minmax(1rem, 1fr);
   min-height: 100svh;
   overflow-x: clip;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 
   > * {
     grid-column: 2;
