@@ -152,7 +152,7 @@ export default async function ArtistSingle({ params }) {
             className={`relative heading-tagline px-4 py-2 ${
               !actPlaying.cancelled && "border-2"
             } inline-block`}
-          >
+          />
           <h1
             className={`relative heading-tagline px-4 py-2 ${
               !actPlaying.cancelled && "border-2"
@@ -193,4 +193,5 @@ export default async function ArtistSingle({ params }) {
         </article>
       </section>
     </main>
-  )}
+  );
+}
