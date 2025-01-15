@@ -11,6 +11,10 @@ export function keyEnter(e) {
   }
 }
 
+export async function Processing(ms) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function getTotalQuantity(type) {
   const { partoutTickets, vipTickets } = useTickets();
   const { doubleTents, doubleTentSpaces, tripleTents, tripleTentSpaces } = useTents();

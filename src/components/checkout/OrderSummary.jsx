@@ -1,17 +1,17 @@
 "use client";
 
-import { useOrder } from "@/store/orderStore";
+import { useOrder } from "@/store/OrderStore";
 import ReservationTimer from "./ReservationTimer";
 import { useTickets } from "@/store/TicketStore";
 import { useTents } from "@/store/TentStore";
 import { orderTotal } from "@/lib/utils";
 import { useSession } from "@/store/SessionStore";
+import { SmallLoading } from "@/app/(booking)/session/reservation/flow/checkout/loading";
+import { Input } from "@headlessui/react";
 
-export default function OrderSummary() {
-  const { orderData } = useOrder();
+export default function OrderSummary({ step, orderData, isPending }) {
   const tickets = useTickets();
   const tents = useTents();
-  const { activeStep } = useSession();
 
   const priceTotal = orderTotal(
     tickets.partoutTickets,
@@ -22,13 +22,18 @@ export default function OrderSummary() {
   );
 
   const styles = `md:grid border border-border-form self-start grid-rows-subgrid row-span-full ${
-    activeStep === 3 ? "grid" : "hidden"
+    step === 3 ? "grid" : "hidden"
   }`;
 
   return (
     <section className={styles}>
       <OrderHeader />
-      <OrderOverview {...tickets}>
+      <OrderOverview
+        isPending={isPending}
+        activeStep={step}
+        {...tickets}
+        {...orderData}
+      >
         <ItemBasket {...tickets} {...tents} />
         <FeesBasket greenFee={orderData?.green_fee} />
       </OrderOverview>
@@ -39,7 +44,7 @@ export default function OrderSummary() {
 
 function OrderHeader() {
   return (
-    <header className="border-b border-border-form grid place-items-end p-8">
+    <header className="cursor-default border-b border-border-form grid place-items-end p-8">
       <h3 className="body-copy font-semibold w-full text-center">
         Order Summary
       </h3>
@@ -47,32 +52,47 @@ function OrderHeader() {
   );
 }
 
-function OrderOverview({ partoutTickets, vipTickets, children }) {
-  const { activeStep } = useSession();
+function OrderOverview({
+  isPending,
+  activeStep,
+  reservation_id,
+  partoutTickets,
+  vipTickets,
+  children,
+}) {
   return (
     <article
-      className={`grid grid-rows-[auto_1fr] ${
+      className={`cursor-default grid grid-rows-[auto_1fr] ${
         activeStep !== 1 && "grid-rows-[auto_auto_1fr]"
       } gap-y-2`}
     >
       <div className={activeStep === 3 ? "hidden sm:block" : undefined}>
-        {activeStep !== 1 && <ReservationTimer />}
+        {reservation_id && <ReservationTimer />}
       </div>
-      {!partoutTickets && !vipTickets && (
+      {isPending ? (
+        <SmallLoading />
+      ) : !partoutTickets && !vipTickets ? (
         <small className="body-copy-small p-6 text-center italic opacity-50">
           No tickets selected.
         </small>
+      ) : (
+        <>{children}</>
       )}
-      {children}
     </article>
   );
 }
 
 function OrderTotal({ total }) {
   return (
-    <footer className="flex justify-between gap-4 p-6 items-center border-t border-border-global font-bold">
+    <footer className="relative flex justify-between gap-4 p-6 items-center border-t border-border-global font-bold">
       <p className="body-copy font-bold uppercase tracking-wider">Total</p>
       <p className="body-copy font-semibold">{total},-</p>
+      <Input
+        name="priceTotal"
+        value={total}
+        readOnly
+        className="absolute opacity-0 text-right body-copy font-semibold"
+      />
     </footer>
   );
 }
@@ -106,13 +126,13 @@ function ItemBasket({ partoutTickets, vipTickets, doubleTents, tripleTents }) {
 
 function Item({ quantity, price, children }) {
   return (
-    <li className="flex justify-between items-end gap-2">
-      <p className="body-copy flex gap-2 items-end">
+    <li className="@container flex justify-between items-end gap-2 body-copy text-base">
+      <p className="flex gap-2 items-end">
         <span className="body-copy-small">{quantity} x</span>
         {children}
         {quantity > 1 && "s"}
       </p>
-      <p className="body-copy">{quantity * price},-</p>
+      <p>{quantity * price},-</p>
     </li>
   );
 }

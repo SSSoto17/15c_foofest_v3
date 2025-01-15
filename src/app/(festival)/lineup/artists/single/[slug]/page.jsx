@@ -1,12 +1,23 @@
 import Image from "next/image";
-import { getArtistBySlug, getStages } from "@/lib/lineup";
+import Link from "next/link";
+import { getArtistBySlug, getArtists, getStages } from "@/lib/lineup";
 import { endpointAPI } from "@/lib/endpoints";
-import { BackButton } from "@/components/lineup/Buttons";
+
+import BackButton from "@/components/lineup/BackButton";
+
+export async function generateStaticParams() {
+  const artists = await getArtists();
+
+  return artists.map((artist) => ({
+    slug: artist.slug,
+  }));
+}
 
 export default async function ArtistSingle({ params }) {
-  const slug = await params;
-  const artist = await getArtistBySlug(slug.slug);
-  const artistImg = artist.logo.startsWith("https://")
+  const { slug } = await params;
+  const artist = await getArtistBySlug(slug);
+
+  const img = artist.logo.startsWith("https://")
     ? artist.logo
     : `${endpointAPI}/logos/${artist.logo}`;
 
@@ -20,9 +31,19 @@ export default async function ArtistSingle({ params }) {
       ...schedule.Jotunheim.mon,
       ...schedule.Vanaheim.mon,
     ],
+    acts: [
+      ...schedule.Midgard.mon,
+      ...schedule.Jotunheim.mon,
+      ...schedule.Vanaheim.mon,
+    ],
   };
   const tue = {
     day: "Tuesday",
+    acts: [
+      ...schedule.Midgard.tue,
+      ...schedule.Jotunheim.tue,
+      ...schedule.Vanaheim.tue,
+    ],
     acts: [
       ...schedule.Midgard.tue,
       ...schedule.Jotunheim.tue,
@@ -36,9 +57,19 @@ export default async function ArtistSingle({ params }) {
       ...schedule.Jotunheim.wed,
       ...schedule.Vanaheim.wed,
     ],
+    acts: [
+      ...schedule.Midgard.wed,
+      ...schedule.Jotunheim.wed,
+      ...schedule.Vanaheim.wed,
+    ],
   };
   const thu = {
     day: "Thursday",
+    acts: [
+      ...schedule.Midgard.thu,
+      ...schedule.Jotunheim.thu,
+      ...schedule.Vanaheim.thu,
+    ],
     acts: [
       ...schedule.Midgard.thu,
       ...schedule.Jotunheim.thu,
@@ -52,9 +83,19 @@ export default async function ArtistSingle({ params }) {
       ...schedule.Jotunheim.fri,
       ...schedule.Vanaheim.fri,
     ],
+    acts: [
+      ...schedule.Midgard.fri,
+      ...schedule.Jotunheim.fri,
+      ...schedule.Vanaheim.fri,
+    ],
   };
   const sat = {
     day: "Saturday",
+    acts: [
+      ...schedule.Midgard.sat,
+      ...schedule.Jotunheim.sat,
+      ...schedule.Vanaheim.sat,
+    ],
     acts: [
       ...schedule.Midgard.sat,
       ...schedule.Jotunheim.sat,
@@ -68,10 +109,18 @@ export default async function ArtistSingle({ params }) {
       ...schedule.Jotunheim.sun,
       ...schedule.Vanaheim.sun,
     ],
+    acts: [
+      ...schedule.Midgard.sun,
+      ...schedule.Jotunheim.sun,
+      ...schedule.Vanaheim.sun,
+    ],
   };
 
   const days = [mon, tue, wed, thu, fri, sat, sun];
 
+  const daySchedule = days.find((day) =>
+    day.acts.find((act) => act.act === artist.name)
+  );
   const daySchedule = days.find((day) =>
     day.acts.find((act) => act.act === artist.name)
   );
@@ -81,7 +130,7 @@ export default async function ArtistSingle({ params }) {
 
   return (
     <main className="my-8">
-      <BackButton></BackButton>
+      <BackButton />
 
       <section className="grid md:grid-cols-2 gap-10">
         <div>
@@ -104,10 +153,18 @@ export default async function ArtistSingle({ params }) {
               !actPlaying.cancelled && "border-2"
             } inline-block`}
           >
+          <h1
+            className={`relative heading-tagline px-4 py-2 ${
+              !actPlaying.cancelled && "border-2"
+            } inline-block`}
+          >
             {dayPlaying}
             <span className="ml-8">{actPlaying.start}</span>
             {actPlaying.cancelled && (
               <span>
+                <p className="absolute left-16 -bottom-2 col-start-1 -rotate-12 text-res-xs sm:text-res-sm uppercase border-2 border-gold-600 text-gold-600 inline-block px-1 sm:px-2 sm:py-0.5">
+                  Cancelled
+                </p>
                 <p className="absolute left-16 -bottom-2 col-start-1 -rotate-12 text-res-xs sm:text-res-sm uppercase border-2 border-gold-600 text-gold-600 inline-block px-1 sm:px-2 sm:py-0.5">
                   Cancelled
                 </p>
