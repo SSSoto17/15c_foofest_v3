@@ -1,6 +1,14 @@
+import { Anton } from "next/font/google";
 import { useTickets } from "@/store/TicketStore";
 import { useTents } from "@/store/TentStore";
 import { postGuests } from "@/lib/order";
+
+export const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-anton",
+});
 
 export const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -17,7 +25,8 @@ export async function Processing(ms) {
 
 export function getTotalQuantity(type) {
   const { partoutTickets, vipTickets } = useTickets();
-  const { doubleTents, doubleTentSpaces, tripleTents, tripleTentSpaces } = useTents();
+  const { doubleTents, doubleTentSpaces, tripleTents, tripleTentSpaces } =
+    useTents();
 
   const totalTickets = partoutTickets + vipTickets;
   const totalTents = doubleTents + tripleTents;
