@@ -116,6 +116,7 @@ export default async function ArtistSingle({ params }) {
   };
 
   const days = [mon, tue, wed, thu, fri, sat, sun];
+  // console.log("DAYS: ", days);
 
   const daySchedule = days.find((day) =>
     day.acts.find((act) => act.act === name)
@@ -172,6 +173,7 @@ export default async function ArtistSingle({ params }) {
                   <li key={i}>{member}</li>
                 ))}
               </ul>
+              {/* <p>{artist.members}</p> */}
             </article>
           </div>
           <article>

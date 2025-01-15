@@ -1,19 +1,35 @@
 // COMPONENTS
 import Link from "next/link";
+import Filter from "@/components/lineup/Filter";
 import ArtistCard from "@/components/lineup/ArtistCard";
 import { ScrollToButton } from "@/components/lineup/Buttons";
 // FUNCTIONS
 import { getArtists } from "@/lib/lineup";
-import Filter from "@/components/lineup/SortByMenu";
 
-async function artistData(genre, limit) {
-  let artists = await getArtists();
+async function getArtistData(genre, limit) {
+  const data = await getArtists();
+  const artistsData = {
+    totalArtists: data.length,
+    artists: data.sort((a, b) => a.name.localeCompare(b.name)),
+  };
 
-  if (genre) {
-    artists.filter((artist) => artist.genre === genre);
+  if (Array.isArray(genre)) {
+    artistsData.artists = genre.flatMap((obj) =>
+      artistsData.artists.filter((artist) => artist.genre === obj)
+    );
+  } else if (genre) {
+    artistsData.artists = artistsData.artists.filter(
+      (artist) => artist.genre === genre
+    );
   }
 
-  return artists.sort((a, b) => a.name.localeCompare(b.name)).slice(0, limit);
+  // if (limit) {
+  //   artistsData.artists.slice(0, limit);
+  // } else {
+  //   artistsData.artists.slice(0, 12);
+  // }
+
+  return artistsData;
 }
 
 async function genreData() {
@@ -26,37 +42,51 @@ async function genreData() {
 export default async function Page({ searchParams }) {
   const { genre, limit } = await searchParams;
   const genres = await genreData();
-  let artists = await artistData(genre, limit || 12);
-
-  console.log(artists);
+  const artistData = await getArtistData(genre, limit || 12);
 
   return (
-    <section className="grid grid-cols-4 gap-4 items-start">
+    <section className="grid sm:grid-cols-4 gap-4 items-start">
       <Filter genres={genres} active={genre} />
-      <ul className="col-span-3 grid grid-cols-subgrid gap-4">
-        {genre
-          ? genre.map((filter, id) => (
+      <ul className="sm:col-span-3 grid grid-cols-[repeat(auto-fill,_minmax(175px,_1fr))] gap-4 content-start">
+        {Array.isArray(genre) ? (
+          genre.map((filter, id) => {
+            console.log(filter);
+            return (
               <FilterGroup key={id} filter={filter}>
-                {artists
+                {artistData.artists
                   .filter((artist) => artist.genre === filter)
-                  .map((artist, id) => (
-                    <ArtistCard key={id} {...artist} />
-                  ))}
+                  .map((artist, id) => {
+                    return <ArtistCard key={id} {...artist} />;
+                  })}
               </FilterGroup>
-            ))
-          : artists.map((artist, id) => <ArtistCard key={id} {...artist} />)}
+            );
+          })
+        ) : genre ? (
+          <FilterGroup filter={genre}>
+            {artistData.artists
+              .filter((artist) => artist.genre === genre)
+              .map((artist, id) => {
+                return <ArtistCard key={id} {...artist} />;
+              })}
+          </FilterGroup>
+        ) : (
+          artistData.artists.map((artist, id) => (
+            <ArtistCard key={id} {...artist} />
+          ))
+        )}
       </ul>
-      <Link
-        href={`/lineup/artists?limit=${Number(limit) + 12 || 24}${
-          genre ? `&genre=${genre.join("&genre=")}` : ""
-        }`}
-        scroll={false}
-        className="col-start-2 col-span-3 cursor-pointer border-2 border-forest-600 body-copy text-forest-500 hover:text-forest-400 hover:border-forest-500 inline-block px-6 py-3 mt-8 place-self-center"
-      >
-        Load more
-      </Link>
-      {/* {limit < artists.length && (
-      )} */}
+      {/* <footer className="sm:col-start-2 sm:col-span-3 grid place-content-center">
+        {(!limit || limit < artists.length) && (
+          <Link
+            href={`/lineup/artists?limit=${Number(limit) + 12 || 24}`}
+            scroll={false}
+            replace={true}
+            className="col-start-2 col-span-3 cursor-pointer border-2 border-forest-600 body-copy text-forest-500 hover:text-forest-400 hover:border-forest-500 inline-block px-6 py-3 mt-8 place-self-center"
+          >
+            Load more
+          </Link>
+        )}
+      </footer> */}
       <ScrollToButton scrollFromTop="0" simple={false}>
         Back to top
       </ScrollToButton>
@@ -66,8 +96,8 @@ export default async function Page({ searchParams }) {
 
 function FilterGroup({ filter, children }) {
   return (
-    <li className="col-span-3 grid grid-cols-subgrid">
-      <h2 className="col-span-full heading-4">{filter}</h2>
+    <li className="col-span-full grid grid-cols-subgrid">
+      <h2 className="col-span-full heading-6">{filter}</h2>
       <ul className="col-span-full grid grid-cols-subgrid gap-y-4 py-6">
         {children}
       </ul>
