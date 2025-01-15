@@ -32,4 +32,3 @@ export default function ArtistCard({ name, slug, logo }) {
     </li>
   );
 }
-}

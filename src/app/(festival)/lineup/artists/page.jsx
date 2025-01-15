@@ -1,13 +1,10 @@
 // COMPONENTS
-import LineupLayout from "@/components/lineup/LineupLayout";
-import ByArtist from "@/components/lineup/ByArtist";
-import ScrollToButton from "@/components/lineup/ScrollToButton";
-import ArtistCard from "@/components/lineup/ArtistCard";
 import Link from "next/link";
+import Filter from "@/components/lineup/SortByMenu";
+import ArtistCard from "@/components/lineup/ArtistCard";
+import { ScrollToButton } from "@/components/lineup/Buttons";
 // FUNCTIONS
 import { getArtists } from "@/lib/lineup";
-import Filter from "@/components/lineup/SortByMenu";
-import { revalidatePath } from "next/cache";
 
 async function artistData(genre, limit) {
   let artists = await getArtists();
