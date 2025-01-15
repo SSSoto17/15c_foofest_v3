@@ -8,10 +8,11 @@ export const BackButton = () => {
   const router = useRouter();
 
   return (
-    <Button onClick={() => router.back()} className="cursor-pointer hover:text-aztec-200 flex gap-4 items-center mb-4 text-aztec-300">
-      <span className="">
-        <MdOutlineArrowBack />
-      </span>
+    <Button
+      onClick={() => router.back()}
+      className="cursor-pointer hover:text-aztec-200 flex gap-4 items-center mb-4 text-aztec-300"
+    >
+      <MdOutlineArrowBack />
       Back
     </Button>
   );
@@ -51,13 +52,21 @@ export const ScrollToButton = ({ children, scrollFromTop, simple }) => {
   }, []);
 
   return simple ? (
-    <button className="cursor-pointer justify-self-center col-span-full" onClick={scrollToTop}>
+    <button
+      className="cursor-pointer justify-self-center col-span-full"
+      onClick={scrollToTop}
+    >
       {children}
       {/* BACK TO TOP
       <MdOutlineArrowUpward className="inline-block h-4 w-4" /> */}
     </button>
   ) : (
-    <button className={`fixed bottom-0 right-0 bg-aztec-300 text-forest-950 body-copy-small px-4 py-2 mr-10 mb-[48px] z-50 items-center flex gap-2 cursor-pointer opacity-0 ${isVisible && "opacity-100"}`} onClick={scrollToTop}>
+    <button
+      className={`fixed bottom-0 right-0 bg-aztec-300 text-forest-950 body-copy-small px-4 py-2 mr-10 mb-[48px] z-50 items-center flex gap-2 cursor-pointer opacity-0 ${
+        isVisible && "opacity-100"
+      }`}
+      onClick={scrollToTop}
+    >
       {children}
       <MdOutlineArrowUpward className="inline-block h-4 w-4" />
     </button>
