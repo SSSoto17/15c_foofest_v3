@@ -13,7 +13,6 @@ import { Processing } from "@/lib/utils";
 
 export async function completeOrder() {
   await deleteUnpaid();
-  revalidatePath("/");
   return { success: true };
 }
 
@@ -38,7 +37,7 @@ export async function submitOrder(prev, formData) {
     const stepThree = await submitStepThree(prev, formData);
     revalidatePath("/");
     console.log("completing step 3: ", stepThree);
-    return { success: true, ...stepThree };
+    return { success: false, ...stepThree };
   }
 }
 
