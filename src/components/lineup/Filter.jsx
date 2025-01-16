@@ -13,7 +13,7 @@ import {
 } from "@headlessui/react";
 
 // FUNCTIONS
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
 // ASSETS
@@ -101,32 +101,5 @@ function CheckField({ active, children }) {
         {children}
       </Label>
     </Field>
-  );
-}
-
-export function LoadMore({ limit, genre }) {
-  const router = useRouter();
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const loadLimit = limit ? Number(limit) + 12 : 24;
-    router.push("/lineup/artists?limit=" + loadLimit, {
-      scroll: false,
-    });
-  }
-  return (
-    <Form
-      onSubmit={(e) => handleSubmit(e)}
-      className="grid place-content-center col-span-full"
-    >
-      <Button
-        type="submit"
-        name="limit"
-        value={Number(limit) + 12 || 24}
-        className="button button-secondary button-size-base font-bold uppercase"
-      >
-        Load More
-      </Button>
-    </Form>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { Button } from "@headlessui/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -65,5 +66,31 @@ export function ScrollToButton({ children, scrollFromTop, simple }) {
       {/* {children} */}
       <MdOutlineArrowUpward size="24" />
     </button>
+  );
+}
+
+export function LoadMore({ limit }) {
+  const router = useRouter();
+  const loadLimit = limit ? Number(limit) + 12 : 24;
+  console.log(loadLimit);
+  const newLimit = `/lineup/artists?limit=${loadLimit}`;
+
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   const loadLimit = limit ? Number(limit) + 12 : 24;
+  //   router.push("/lineup/artists?limit=" + loadLimit, {
+  //     scroll: false,
+  //   });
+  // }
+  return (
+    <footer className="grid place-content-center col-span-full">
+      <Link
+        href={newLimit}
+        scroll={false}
+        className="button button-secondary button-size-base font-bold uppercase"
+      >
+        Load More
+      </Link>
+    </footer>
   );
 }

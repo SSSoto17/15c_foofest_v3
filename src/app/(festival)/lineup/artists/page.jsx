@@ -1,10 +1,9 @@
 // COMPONENTS
 import Filter from "@/components/lineup/Filter";
 import ArtistCard from "@/components/lineup/ArtistCard";
-import { ScrollToButton } from "@/components/lineup/Buttons";
+import { LoadMore, ScrollToButton } from "@/components/lineup/Buttons";
 // FUNCTIONS
 import { getArtists } from "@/lib/lineup";
-import { LoadMore } from "@/components/lineup/Filter";
 
 async function genreData() {
   const artists = await getArtists();
@@ -30,10 +29,13 @@ export default async function Page({ searchParams }) {
     artists = artists.filter((artist) => artist.genre === genre);
   }
 
+  const totalArtists = artists.length;
+
+  console.log(totalArtists);
+
   // LIMIT ARTISTS
   if (!genre && limit) {
-    const loadLimit = Number(limit) + 12;
-    artists = artists.slice(0, loadLimit);
+    artists = artists.slice(0, Number(limit));
   } else if (!genre && !limit) {
     artists = artists.slice(0, 12);
   }
@@ -41,15 +43,20 @@ export default async function Page({ searchParams }) {
   return (
     <section className="grid sm:grid-cols-3 lg:grid-cols-4 gap-4 items-start relative">
       <Filter genres={genres} active={genre} />
-      <ArtistGrid data={artists} genre={genre} limit={limit} />
+      <ArtistGrid
+        data={artists}
+        genre={genre}
+        limit={limit}
+        totalLimit={totalArtists}
+      />
       <ScrollToButton scrollFromTop="0">Back to top</ScrollToButton>
     </section>
   );
 }
 
-function ArtistGrid({ data, limit, genre }) {
+function ArtistGrid({ data, limit, totalLimit, genre }) {
   return (
-    <ul className="sm:col-span-2 lg:col-span-3 grid grid-cols-[repeat(auto-fill,_minmax(175px,_1fr))] gap-4 content-start">
+    <ul className="sm:col-span-2 lg:col-span-3 grid grid-cols-[repeat(auto-fit,_minmax(216px,_1fr))] gap-4 content-start">
       {genre instanceof Array ? (
         genre.map((filter, id) => {
           return (
@@ -70,7 +77,7 @@ function ArtistGrid({ data, limit, genre }) {
           return <ArtistCard key={id} {...artist} />;
         })
       )}
-      {((!limit && !genre) || (!genre && data.length > limit)) && (
+      {((!limit && !genre) || (!genre && totalLimit > limit)) && (
         <LoadMore limit={limit} genre={genre} />
       )}
     </ul>
