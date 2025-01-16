@@ -168,7 +168,7 @@
   }
 
   .button-size-sm {
-    @apply rounded-sm p-2 max-w-40 font-semibold;
+    @apply text-res-sm @sm:text-res-base rounded-sm p-2 max-w-40 font-semibold;
   }
 
   .button-size-base {
@@ -189,6 +189,10 @@
 
   .input-radio {
     @apply block w-4 aspect-square rounded-full group-not-data-disabled:group-hover:bg-surface-radio--hover border-2 border-border-radio group-data-checked:border-6 group-data-checked:border-border-radio--checked group-data-disabled:border-border-radio--disabled;
+  }
+
+  .input-checkbox {
+    @apply rounded-sm border-2 border-aztec-600 data-checked:border-forest-600 data-checked:bg-forest-600 data-focus:outline-none group-hover:border-aztec-500;
   }
 }
 

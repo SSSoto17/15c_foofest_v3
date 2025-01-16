@@ -10,11 +10,10 @@ import {
   Field,
   Label,
   Button,
-  CloseButton,
 } from "@headlessui/react";
 
 // FUNCTIONS
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
 // ASSETS
@@ -22,18 +21,16 @@ import { MdArrowRight, MdOutlineCheck } from "react-icons/md";
 
 export default function Filter({ active, genres }) {
   return (
-    <aside className="sm:row-span-full">
+    <aside className="@container sm:row-span-full">
       <Disclosure>
         <DisclosureButton className="group cursor-pointer flex items-center border-2 border-border-global p-2 heading-6 text-res-base w-full">
           <MdArrowRight
             size="32"
-            className="group-data-[open]:rotate-90 transition-all duration-150"
+            className="group-data-open:rotate-90 transition-all duration-200"
           />
           Filter By Genre
         </DisclosureButton>
-        <DisclosurePanel className="grid gap-4 border-2 border-t-0 border-border-global p-4">
-          <FilterList genres={genres} selected={active} />
-        </DisclosurePanel>
+        <FilterList genres={genres} selected={active} />
       </Disclosure>
     </aside>
   );
@@ -41,21 +38,29 @@ export default function Filter({ active, genres }) {
 
 function FilterList({ genres, selected }) {
   return (
-    <Form action="/lineup/artists" className="grid gap-4">
-      <ul className="grid gap-1">
-        {genres.map((genreName, i) => {
-          const isActive = Array.isArray(selected)
-            ? selected?.find((genre) => genre === genreName)
-            : selected === genreName;
-          return (
-            <li key={i}>
-              <GenreCheckbox label={genreName} active={isActive} />
-            </li>
-          );
-        })}
-      </ul>
-      <FilterButtons />
-    </Form>
+    <DisclosurePanel className="@container border-2 border-t-0 border-border-global p-4">
+      <Form action="/lineup/artists" className="grid gap-4">
+        <ul className="grid gap-1">
+          {genres.map((genreName, i) => {
+            const isActive = Array.isArray(selected)
+              ? selected?.find((genre) => genre === genreName)
+              : selected === genreName;
+            const data = {
+              name: "genre",
+              value: genreName,
+              state: isActive && true,
+            };
+            console.log(isActive);
+            return (
+              <li key={i}>
+                <CheckField active={isActive}>{genreName}</CheckField>
+              </li>
+            );
+          })}
+        </ul>
+        <FilterButtons />
+      </Form>
+    </DisclosurePanel>
   );
 }
 
@@ -64,7 +69,7 @@ function FilterButtons() {
     redirect("/lineup/artists");
   }
   return (
-    <footer className="flex justify-end gap-2">
+    <footer className="flex gap-2 justify-center @sm:gap-6">
       <Button
         type="submit"
         formAction={handleClear}
@@ -79,20 +84,49 @@ function FilterButtons() {
   );
 }
 
-function GenreCheckbox({ label, active }) {
-  const [checked, setChecked] = useState((active && true) || false);
+function CheckField({ active, children }) {
+  const [checked, setChecked] = useState(active || false);
   return (
     <Field className="flex items-center gap-3 max-w-xl group">
       <Checkbox
         name="genre"
-        value={label}
+        value={children}
         checked={checked}
         onChange={setChecked}
-        className="border-2 border-aztec-600 rounded-sm data-checked:border-forest-600 data-checked:bg-forest-600 data-focus:outline-none group-hover:cursor-pointer group-hover:bg-aztec-900"
+        className="input-checkbox"
       >
-        <MdOutlineCheck className={`opacity-0 ${checked && "opacity-100"}`} />
+        <MdOutlineCheck className="opacity-0 group-has-data-checked:opacity-100" />
       </Checkbox>
-      <Label className="group-hover:cursor-pointer">{label}</Label>
+      <Label className="body-copy-small md:text-res-base text-aztec-300 flex justify-between group-data-disabled:opacity-25 group-not-data-disabled:cursor-pointer">
+        {children}
+      </Label>
     </Field>
+  );
+}
+
+export function LoadMore({ limit, genre }) {
+  const router = useRouter();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const loadLimit = limit ? Number(limit) + 12 : 24;
+    router.push("/lineup/artists?limit=" + loadLimit, {
+      scroll: false,
+    });
+  }
+  return (
+    <Form
+      onSubmit={(e) => handleSubmit(e)}
+      className="grid place-content-center col-span-full"
+    >
+      <Button
+        type="submit"
+        name="limit"
+        value={Number(limit) + 12 || 24}
+        className="button button-secondary button-size-base font-bold uppercase"
+      >
+        Load More
+      </Button>
+    </Form>
   );
 }

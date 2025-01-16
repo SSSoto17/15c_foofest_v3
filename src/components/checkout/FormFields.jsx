@@ -138,25 +138,19 @@ export function RadioSelector({ data, selected, setSelected }) {
 }
 
 // CHECKBOX
-export function CheckField({ data, savedState, minor, children }) {
-  const [checked, setChecked] = useState(savedState || false);
+export function CheckField({ data, state, children }) {
+  const [checked, setChecked] = useState(state || false);
   return (
-    <Field className="flex items-center gap-2 md:gap-3 max-w-xl group hover:cursor-pointer">
+    <Field className="flex items-center gap-2 md:gap-3 max-w-xl group">
       <Checkbox
         name={data?.name}
         checked={data?.state || checked}
         onChange={data?.onChange || setChecked}
-        className="border-2 border-aztec-600 rounded-sm data-checked:border-forest-600 data-checked:bg-forest-600 data-focus:outline-none"
+        className="input-checkbox"
       >
-        <MdOutlineCheck
-          className={`opacity-0 ${(data?.state || checked) && "opacity-100"}`}
-        />
+        <MdOutlineCheck className="opacity-0 group-has-data-checked:opacity-100" />
       </Checkbox>
-      <Label
-        className={`body-copy text-res-sm md:text-res-base flex justify-between group-data-disabled:opacity-25 group-not-data-disabled:cursor-pointer ${
-          minor && "body-copy-small text-aztec-300"
-        }`}
-      >
+      <Label className="body-copy-small md:text-res-base text-aztec-300 flex justify-between group-data-disabled:opacity-25 group-not-data-disabled:cursor-pointer">
         {children}{" "}
         {data?.price && (
           <span className="opacity-50 place-self-end ml-8">

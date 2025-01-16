@@ -74,7 +74,7 @@ export function GreenFee({ green_fee }) {
   };
   return (
     <Fieldset className="@container flex flex-wrap @lg:flex-nowrap items-center gap-2">
-      <CheckField data={data} savedState={green_fee}>
+      <CheckField data={data} state={green_fee}>
         Green Fee
       </CheckField>
       <Information>

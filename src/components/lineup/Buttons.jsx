@@ -10,7 +10,7 @@ export const BackButton = () => {
   return (
     <Button
       onClick={() => router.back()}
-      className="cursor-pointer hover:text-aztec-200 flex gap-4 items-center mb-4 text-aztec-300"
+      className="cursor-pointer body-copy uppercase font-bold py-4 transition-all duration-150 text-aztec-400  hover:text-aztec-300 hover:scale-105 flex gap-2 items-center"
     >
       <MdOutlineArrowBack />
       Back
@@ -22,7 +22,7 @@ export const BackButton = () => {
 // https://medium.com/@ojogbomichael/same-page-navigation-with-nextjs-bb99cccfda11
 // Styling and more adjusted to fit our design
 
-export const ScrollToButton = ({ children, scrollFromTop, simple }) => {
+export function ScrollToButton({ children, scrollFromTop, simple }) {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
   function scrollToTop() {
@@ -34,7 +34,7 @@ export const ScrollToButton = ({ children, scrollFromTop, simple }) => {
 
   const handleScroll = () => {
     // Show the button when the user scrolls down
-    if (window.scrollY > 150) {
+    if (window.scrollY > 350) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -51,24 +51,19 @@ export const ScrollToButton = ({ children, scrollFromTop, simple }) => {
     };
   }, []);
 
-  return simple ? (
+  return (
     <button
-      className="cursor-pointer justify-self-center col-span-full"
-      onClick={scrollToTop}
-    >
-      {children}
-      {/* BACK TO TOP
-      <MdOutlineArrowUpward className="inline-block h-4 w-4" /> */}
-    </button>
-  ) : (
-    <button
-      className={`fixed bottom-0 right-0 bg-aztec-300 text-forest-950 body-copy-small px-4 py-2 mr-10 mb-[48px] z-50 items-center flex gap-2 cursor-pointer opacity-0 ${
+      aria-label="Back to Top"
+      className={`fixed m-12 bottom-0 right-0 rounded-full bg-forest-600 drop-shadow-2xl body-copy font-bold p-4 z-30 cursor-pointer hover:scale-105 transition-all duration-150 opacity-0 ${
         isVisible && "opacity-100"
       }`}
+      // className={`fixed bottom-0 right-0 bg-aztec-300 text-forest-950 body-copy-small px-4 py-2 mr-10 mb-[48px] z-50 items-center flex gap-2 cursor-pointer opacity-0 ${
+      //   isVisible && "opacity-100"
+      // }`}
       onClick={scrollToTop}
     >
-      {children}
-      <MdOutlineArrowUpward className="inline-block h-4 w-4" />
+      {/* {children} */}
+      <MdOutlineArrowUpward size="24" />
     </button>
   );
-};
+}

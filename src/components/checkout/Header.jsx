@@ -17,6 +17,11 @@ import { deleteUnpaid } from "@/lib/order";
 
 export function WarningEscape() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleExit = () => {
+    deleteUnpaid();
+    redirect("/");
+  };
   return (
     <>
       <Button
@@ -31,17 +36,26 @@ export function WarningEscape() {
         onClose={() => setIsOpen(false)}
         className="fixed inset-0 flex items-center justify-center p-4 backdrop-blur-md backdrop-grayscale-25 backdrop-brightness-50 z-50"
       >
-        <Modal setIsOpen={setIsOpen} />
+        <Modal setIsOpen={setIsOpen}>
+          <Button
+            onClick={() => setIsOpen(false)}
+            className="button button-size-sm button-tertiary--disabled"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleExit}
+            className="button button-size-sm button-tertiary--error"
+          >
+            Exit
+          </Button>
+        </Modal>
       </Dialog>
     </>
   );
 }
 
-function Modal({ setIsOpen }) {
-  const handleExit = async () => {
-    await deleteUnpaid();
-    redirect("/");
-  };
+function Modal({ children }) {
   return (
     <div className="bg-surface-global p-12 border border-border-global rounded-sm max-w-md">
       <DialogPanel className="grid gap-6">
@@ -51,20 +65,7 @@ function Modal({ setIsOpen }) {
             If you exit the booking session you will lose your reservation.
           </Description>
         </div>
-        <div className="flex gap-4">
-          <button
-            onClick={() => setIsOpen(false)}
-            className="grow cursor-pointer body-copy bg-aztec-300 hover:bg-aztec-400 p-2 rounded-sm font-semibold max-w-40"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleExit}
-            className="grow cursor-pointer body-copy bg-rose-600 hover:bg-rose-500 p-2 rounded-sm font-semibold max-w-40"
-          >
-            Exit
-          </button>
-        </div>
+        <footer className="flex justify-evenly gap-4">{children}</footer>
       </DialogPanel>
     </div>
   );

@@ -65,12 +65,11 @@ function MobileNav() {
     <Disclosure>
       <MobileNavIcon />
       <DisclosurePanel
-        transition
+        transition={true}
         className="md:hidden fixed inset-0 w-screen grid place-content-center data-closed:left-full bg-[#171e1b] drop-shadow-main gap-4 transition-[left] duration-500 ease-in-out text-2xl"
       >
         <CloseButton
           as={Link}
-          transition
           className="py-2 px-6 uppercase font-semibold cursor-pointer"
           href="/lineup/artists"
         >
@@ -106,7 +105,6 @@ function MobileNavIcon() {
 
   return (
     <DisclosureButton
-      transition
       aria-label="Navigation"
       className="group z-10 cursor-pointer md:hidden"
     >
