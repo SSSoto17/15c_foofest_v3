@@ -18,6 +18,7 @@ import {
 
 // FUNCTIONS
 import { useState, useEffect } from "react";
+import { useTickets } from "@/store/TicketStore";
 
 // NUMBER SPINNER
 export function QuantitySelector({ data, children }) {
@@ -43,6 +44,8 @@ function Spinner({
   overallTotal,
 }) {
   const [quantity, setQuantity] = useState(currentTotal);
+  const { partoutTickets, vipTickets } = useTickets();
+  const totalGuests = partoutTickets + vipTickets;
 
   useEffect(() => {
     setTotal(quantity);
@@ -52,15 +55,15 @@ function Spinner({
     <>
       <div
         className={`input-field input-field-number--focus flex justify-between gap-4 w-fit ${
-          (error?.includes("space") ||
-            (error?.includes("select") && overallTotal < 1) ||
-            (error?.includes("limit") && overallTotal > 10)) &&
+          ((error?.includes("select") && overallTotal < 1) ||
+            (error?.includes("limit") &&
+              overallTotal > 10 &&
+              overallTotal !== 0) ||
+            (error?.includes("space") &&
+              overallTotal !== 0 &&
+              overallTotal !== totalGuests)) &&
           "not-has-data-focus:border-border-global--error bg-surface-input--focus"
         }`}
-        // ((error?.includes("select") && overallTotal < 1) ||
-        //   (error?.includes("limit") && currentTotal > 10) ||
-        //   error?.includes("space")) &&
-        // "not-has-data-focus:border-border-global--error bg-surface-input--focus"
       >
         <Button
           aria-label="Decrease"
@@ -98,7 +101,7 @@ function Spinner({
           />
         </Button>
       )}
-      {error && overallTotal < 1 && (
+      {error?.includes("select") && overallTotal < 1 && (
         <MdOutlineError
           aria-label="Attention!"
           className="place-self-center text-text-global--error error_icon"

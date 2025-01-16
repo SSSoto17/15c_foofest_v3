@@ -1,5 +1,7 @@
+// CSS
 import "@/app/globals.css";
 
+// COMPONENTS
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -10,9 +12,11 @@ import {
   DisclosureButton,
 } from "@headlessui/react";
 
+// ASSETS
 import { anton } from "@/lib/utils";
 import logo from "@/assets/svg/logo_bold.svg";
 
+// META
 export const metadata = {
   title: "FooFest",
 };

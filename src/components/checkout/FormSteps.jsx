@@ -1,6 +1,6 @@
 "use client";
 
-import { SmallLoading } from "@/app/(booking)/session/reservation/flow/checkout/loading";
+// COMPONENTS
 import {
   SelectTickets,
   SelectCampingArea,
@@ -10,6 +10,9 @@ import {
   EnterCustomerData,
   EnterPaymentInfo,
 } from "./FormSections";
+import { SmallLoading } from "@/app/(booking)/session/reservation/flow/checkout/loading";
+
+// FUNCTIONS
 import { getCampingAreas } from "@/lib/order";
 
 export function BookingStepOne({ orderData, errors }) {

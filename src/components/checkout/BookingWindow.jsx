@@ -141,7 +141,6 @@ function NavButton({
   isSubmitting,
   icon,
 }) {
-  console.log(isSubmitting);
   return (
     <Button
       name={name}

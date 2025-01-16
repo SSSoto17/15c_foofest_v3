@@ -1,15 +1,17 @@
 import "@/app/globals.css";
 
 // COMPONENTS
-import { Suspense } from "react";
-import Loading from "./loading";
-import { anton } from "@/lib/utils";
 import Image from "next/image";
 import Header from "@/components/Header";
+import Loading from "./loading";
 import { WarningEscape } from "@/components/checkout/Header";
+import { Suspense } from "react";
+import { anton } from "@/lib/utils";
 
+// ASSETS
 import logo from "@/assets/svg/logo_bold.svg";
 
+// META
 export const metadata = {
   title: "FooFest",
 };

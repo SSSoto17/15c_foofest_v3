@@ -35,11 +35,13 @@ import { keyEnter } from "@/lib/utils";
 export default function Page() {
   // FORM ACTION
   const initState = { step: 1, success: false, errors: {} };
+
   const [state, submit, isPending] = useActionState(submitOrder, initState);
   const [order, complete, processingOrder] = useActionState(completeOrder, {
     success: false,
   });
 
+  // SUBMIT FORM
   function handleSubmit(e) {
     e.preventDefault();
     const handler = e.nativeEvent.submitter.name;

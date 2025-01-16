@@ -1,8 +1,13 @@
 "use client";
 
+// COMPONENTS
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { ImSpinner2 } from "react-icons/im";
+
+// FUNCTIONS
 import { useState } from "react";
+
+// ASSETS
+import { ImSpinner2 } from "react-icons/im";
 
 export default function Loading() {
   return (

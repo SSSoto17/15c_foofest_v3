@@ -1,5 +1,5 @@
 "use server";
-
+// FUNCTIONS
 import { revalidatePath } from "next/cache";
 import {
   putReservation,
@@ -11,11 +11,13 @@ import {
 } from "@/lib/order";
 import { Processing } from "@/lib/utils";
 
+// ORDER COMPLETION
 export async function completeOrder() {
   await deleteUnpaid();
   return { success: true };
 }
 
+// STATE ACTION
 export async function submitOrder(prev, formData) {
   // BOOKING FLOW || STEP ONE
   if (prev.step === 1) {
@@ -33,10 +35,8 @@ export async function submitOrder(prev, formData) {
 
   // BOOKING FLOW || STEP THREE
   if (prev.step === 3) {
-    console.log(prev);
     const stepThree = await submitStepThree(prev, formData);
     revalidatePath("/");
-    console.log("completing step 3: ", stepThree);
     return { success: false, ...stepThree };
   }
 }

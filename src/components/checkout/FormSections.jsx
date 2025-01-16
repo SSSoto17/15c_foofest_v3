@@ -2,6 +2,7 @@
 
 // COMPONENTS
 import Image from "next/image";
+import Accordion from "../Accordion";
 import { Fieldset, Field, Legend, Label, Input } from "@headlessui/react";
 import {
   QuantitySelector,
@@ -10,18 +11,27 @@ import {
   ErrorText,
   CustomerField,
 } from "./FormFields";
-import Accordion from "../Accordion";
 
 // FUNCTIONS
 import { useEffect, useState } from "react";
+import { getTotalQuantity } from "@/lib/utils";
 
-// STORE
+// HOOKS
 import useAvailableArea from "@/hooks/useAvailableArea";
 import useTicketListing from "@/hooks/useTicketListing";
 import useTentListing from "@/hooks/useTentListing";
 
+// STORE
+import { useTickets } from "@/store/TicketStore";
+import { useTentActions, useTents } from "@/store/TentStore";
+
 // ASSETS
 import vipStamp from "@/assets/svg/vip.svg";
+import DinersClub from "@/assets/svg/payment/dinersclub.svg";
+import MasterCard from "@/assets/svg/payment/mastercard.svg";
+import Visa from "@/assets/svg/payment/visa.svg";
+import { MdOutlineError } from "react-icons/md";
+import { FaRegQuestionCircle } from "react-icons/fa";
 
 // BOOKING || STEP ONE
 export function SelectTickets({ error }) {
@@ -31,8 +41,8 @@ export function SelectTickets({ error }) {
     <Fieldset className="grid grid-rows-[auto_1rem_auto] gap-y-4 max-w-xl">
       <Legend className="heading-5">Tickets</Legend>
       <ErrorText>
-        {ticketListing[0].overallTotal < 1 &&
-          error &&
+        {((ticketListing[0].overallTotal < 1 && error?.tooFewTickets) ||
+          (ticketListing[0].overallTotal > 10 && error?.tooManyTickets)) &&
           (error?.tooFewTickets || error?.tooManyTickets)}
       </ErrorText>
       {ticketListing.map((ticket, id) => {
@@ -72,6 +82,7 @@ export function GreenFee({ green_fee }) {
     name: "greenFee",
     price: 249,
   };
+
   return (
     <Fieldset className="@container flex flex-wrap @lg:flex-nowrap items-center gap-2">
       <CheckField data={data} state={green_fee}>
@@ -102,7 +113,6 @@ export function EnterGuestData({ keys, isBuyer, data, error }) {
         <ErrorText>{error?.name || error?.email}</ErrorText>
       </header>
       {keys.map((key, id) => {
-        // console.log(data && data[id]);
         return (
           <GuestCard
             key={id}
@@ -129,13 +139,13 @@ function GuestCard({
   error,
   state,
 }) {
-  // console.log(savedState);
   const [isBuyer, setIsBuyer] = useState(state || false);
   const checkboxData = {
     name: "isBuyer",
     state: isBuyer,
     onChange: setIsBuyer,
   };
+
   return (
     <>
       <Fieldset className="grid gap-y-6 max-w-md grow shrink">
@@ -193,7 +203,11 @@ function GuestCard({
 export function SelectTents({ error }) {
   const tentListing = useTentListing(error);
   const totalTickets = getTotalQuantity("tickets");
+  const { doubleTentSpaces, tripleTentSpaces } = useTents();
+  const totalTentSpaces = doubleTentSpaces + tripleTentSpaces;
   const { setDouble, setTriple } = useTentActions();
+  const { partoutTickets, vipTickets } = useTickets();
+  const totalGuests = partoutTickets + vipTickets;
 
   useEffect(() => {
     setDouble(0);
@@ -203,7 +217,9 @@ export function SelectTents({ error }) {
   return (
     <Accordion label="Tent Setup" variant="secondary" optional>
       <Fieldset className="@container grid grid-rows-[1.rem_auto] gap-y-4 ml-12 pt-4">
-        {error?.tentSetup ? (
+        {error?.tentSetup &&
+        totalTentSpaces !== 0 &&
+        totalTentSpaces !== totalGuests ? (
           <ErrorText>{error?.tentSetup}</ErrorText>
         ) : (
           <p className="body-copy-small opacity-70">
@@ -253,15 +269,6 @@ export function EnterCustomerData({ name, email, isBuyer, error }) {
     </Fieldset>
   );
 }
-
-import { MdOutlineError } from "react-icons/md";
-import { FaRegQuestionCircle } from "react-icons/fa";
-
-import DinersClub from "@/assets/svg/payment/dinersclub.svg";
-import MasterCard from "@/assets/svg/payment/mastercard.svg";
-import Visa from "@/assets/svg/payment/visa.svg";
-import { getTotalQuantity } from "@/lib/utils";
-import { useTentActions } from "@/store/TentStore";
 
 function PaymentMethods() {
   // ICON CREDIT: https://www.figma.com/community/file/880472656109554171

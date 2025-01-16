@@ -2,6 +2,7 @@
 import Filter from "@/components/lineup/Filter";
 import ArtistCard from "@/components/lineup/ArtistCard";
 import { LoadMore, ScrollToButton } from "@/components/lineup/Buttons";
+
 // FUNCTIONS
 import { getArtists } from "@/lib/lineup";
 

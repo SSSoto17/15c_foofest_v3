@@ -1,8 +1,12 @@
+// COMPONENTS
 import Image from "next/image";
-import { getArtistBySlug, getArtists, getStages } from "@/lib/lineup";
-import { endpointAPI } from "@/lib/endpoints";
 import { BackButton } from "@/components/lineup/Buttons";
 
+// FUNCTIONS
+import { getArtistBySlug, getArtists, getStages } from "@/lib/lineup";
+import { endpointAPI } from "@/lib/endpoints";
+
+// PARAMS
 export async function generateStaticParams() {
   const artists = await getArtists();
 
@@ -116,7 +120,6 @@ export default async function ArtistSingle({ params }) {
   };
 
   const days = [mon, tue, wed, thu, fri, sat, sun];
-  // console.log("DAYS: ", days);
 
   const daySchedule = days.find((day) =>
     day.acts.find((act) => act.act === name)
@@ -128,7 +131,6 @@ export default async function ArtistSingle({ params }) {
   return (
     <main className="my-8">
       <BackButton />
-
       <section className="grid md:grid-cols-2 gap-10">
         <div>
           <Image
@@ -173,7 +175,6 @@ export default async function ArtistSingle({ params }) {
                   <li key={i}>{member}</li>
                 ))}
               </ul>
-              {/* <p>{artist.members}</p> */}
             </article>
           </div>
           <article>

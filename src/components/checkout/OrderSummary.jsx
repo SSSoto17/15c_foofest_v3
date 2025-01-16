@@ -1,11 +1,16 @@
 "use client";
 
+// COMPONENTS
 import ReservationTimer from "./ReservationTimer";
-import { useTickets } from "@/store/TicketStore";
-import { useTents } from "@/store/TentStore";
-import { orderTotal } from "@/lib/utils";
 import { SmallLoading } from "@/app/(booking)/session/reservation/flow/checkout/loading";
 import { Input } from "@headlessui/react";
+
+// FUNCTIONS
+import { orderTotal } from "@/lib/utils";
+
+// STORE
+import { useTickets } from "@/store/TicketStore";
+import { useTents } from "@/store/TentStore";
 
 export default function OrderSummary({ step, orderData, isPending }) {
   const tickets = useTickets();
