@@ -27,7 +27,9 @@ export default function Accordion({
     >
       <summary
         onClick={() => {
-          router.push(`${path}?${name}=${label}`, { scroll: false });
+          if (!optional) {
+            router.push(`${path}?${name}=${label}`, { scroll: false });
+          }
         }}
         className={`cursor-pointer flex items-center justify-between gap-4 ${variants[variant]}`}
       >
