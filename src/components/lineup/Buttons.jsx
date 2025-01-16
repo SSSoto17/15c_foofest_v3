@@ -66,7 +66,6 @@ export function ScrollToButton({ scrollFromTop }) {
 }
 
 export function LoadMore({ limit }) {
-  const router = useRouter();
   const loadLimit = limit ? Number(limit) + 12 : 24;
   const newLimit = `/lineup/artists?limit=${loadLimit}`;
 
