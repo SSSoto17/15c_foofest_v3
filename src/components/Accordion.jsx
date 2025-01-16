@@ -15,6 +15,7 @@ export default function Accordion({
     primary: "heading-4",
     secondary: "body-copy font-bold",
   };
+
   const router = useRouter();
   const path = usePathname();
 

@@ -45,12 +45,6 @@ function FilterList({ genres, selected }) {
             const isActive = Array.isArray(selected)
               ? selected?.find((genre) => genre === genreName)
               : selected === genreName;
-            const data = {
-              name: "genre",
-              value: genreName,
-              state: isActive && true,
-            };
-            console.log(isActive);
             return (
               <li key={i}>
                 <CheckField active={isActive}>{genreName}</CheckField>

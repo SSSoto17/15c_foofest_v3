@@ -23,7 +23,7 @@ export const BackButton = () => {
 // https://medium.com/@ojogbomichael/same-page-navigation-with-nextjs-bb99cccfda11
 // Styling and more adjusted to fit our design
 
-export function ScrollToButton({ children, scrollFromTop, simple }) {
+export function ScrollToButton({ scrollFromTop }) {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
   function scrollToTop() {
@@ -58,12 +58,8 @@ export function ScrollToButton({ children, scrollFromTop, simple }) {
       className={`fixed m-12 bottom-0 right-0 rounded-full bg-forest-600 drop-shadow-2xl body-copy font-bold p-4 z-30 cursor-pointer hover:scale-105 transition-all duration-150 opacity-0 ${
         isVisible && "opacity-100"
       }`}
-      // className={`fixed bottom-0 right-0 bg-aztec-300 text-forest-950 body-copy-small px-4 py-2 mr-10 mb-[48px] z-50 items-center flex gap-2 cursor-pointer opacity-0 ${
-      //   isVisible && "opacity-100"
-      // }`}
       onClick={scrollToTop}
     >
-      {/* {children} */}
       <MdOutlineArrowUpward size="24" />
     </button>
   );
@@ -72,16 +68,8 @@ export function ScrollToButton({ children, scrollFromTop, simple }) {
 export function LoadMore({ limit }) {
   const router = useRouter();
   const loadLimit = limit ? Number(limit) + 12 : 24;
-  console.log(loadLimit);
   const newLimit = `/lineup/artists?limit=${loadLimit}`;
 
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   const loadLimit = limit ? Number(limit) + 12 : 24;
-  //   router.push("/lineup/artists?limit=" + loadLimit, {
-  //     scroll: false,
-  //   });
-  // }
   return (
     <footer className="grid place-content-center col-span-full">
       <Link

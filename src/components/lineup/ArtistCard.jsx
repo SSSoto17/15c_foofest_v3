@@ -1,12 +1,11 @@
 "use client";
+import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { endpointAPI } from "@/lib/endpoints";
-import Image from "next/image";
-import Link from "next/link";
 
 export default function ArtistCard({ name, slug, logo }) {
   const path = usePathname();
-  const url = `${path}/single/${slug}`;
   const img = logo.startsWith("https://")
     ? logo
     : `${endpointAPI}/logos/${logo}`;

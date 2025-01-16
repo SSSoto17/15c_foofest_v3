@@ -31,8 +31,6 @@ export default async function Page({ searchParams }) {
 
   const totalArtists = artists.length;
 
-  console.log(totalArtists);
-
   // LIMIT ARTISTS
   if (!genre && limit) {
     artists = artists.slice(0, Number(limit));

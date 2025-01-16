@@ -1,5 +1,6 @@
 "use client";
 
+// COMPONENTS
 import {
   Dialog,
   DialogTitle,
@@ -8,12 +9,13 @@ import {
   Button,
 } from "@headlessui/react";
 
-// ASSETS
-import { MdArrowLeft } from "react-icons/md";
-
+// FUNCTIONS
 import { useState } from "react";
 import { redirect } from "next/navigation";
 import { deleteUnpaid } from "@/lib/order";
+
+// ASSETS
+import { MdArrowLeft } from "react-icons/md";
 
 export function WarningEscape() {
   const [isOpen, setIsOpen] = useState(false);

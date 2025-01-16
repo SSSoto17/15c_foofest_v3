@@ -1,12 +1,12 @@
 // COMPONENTS
 import ReservationTimer from "@/components/checkout/ReservationTimer";
-import formSteps from "@/data/formsteps";
 import { Button } from "@headlessui/react";
 
 // FUNCTIONS
 import { useState } from "react";
 
 // ASSETS
+import formSteps from "@/data/formsteps";
 import { CgSpinner } from "react-icons/cg";
 import { ImSpinner2 } from "react-icons/im";
 import { PiLockBold } from "react-icons/pi";
@@ -141,27 +141,33 @@ function NavButton({
   isSubmitting,
   icon,
 }) {
+  console.log(isSubmitting);
   return (
     <Button
       name={name}
       type="submit"
       disabled={isPending}
       onClick={(e) => setIsSubmitting(e.target.name)}
-      className="flex items-center place-content-center gap-2 relative p-2 border-forest-600 body-copy bg-forest-600 font-semibold hover:bg-forest-500 hover:border-forest-500 disabled:bg-forest-800 disabled:border-forest-800 disabled:text-aztec-400 button"
+      className="button button-primary button-size-base grid grid-cols-3 gap-2"
     >
-      {isPending && isSubmitting === name && (
-        <CgSpinner
-          size="24"
-          className="loaderIcon absolute top-2 left-10 z-10"
-        />
-      )}
-      {icon && (
+      {icon ? (
         <PiLockBold
           size="20"
-          className={isPending && isSubmitting === name ? "opacity-0" : null}
+          className={
+            isPending && isSubmitting === name
+              ? "opacity-0"
+              : "opacity-100 justify-self-end self-center"
+          }
+        />
+      ) : (
+        <CgSpinner
+          size="24"
+          className={`loaderIcon justify-self-end self-center opacity-0 ${
+            isPending && isSubmitting === name && "opacity-100"
+          }`}
         />
       )}
-      {children}
+      <span className="col-start-2">{children}</span>
     </Button>
   );
 }
