@@ -62,9 +62,8 @@ function ArtistGrid({ data, limit, genre }) {
         })
       ) : genre ? (
         <FilterGroup
-          key={id}
-          filter={filter}
-          data={data.filter((artist) => artist.genre === filter)}
+          filter={genre}
+          data={data.filter((artist) => artist.genre === genre)}
         />
       ) : (
         data.map((artist, id) => {
