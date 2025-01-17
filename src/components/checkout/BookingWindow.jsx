@@ -88,7 +88,7 @@ function FormStepIndicator({ active, step, title, isPending }) {
   );
 }
 
-function FormFooter({ step, isPending }) {
+export function FormFooter({ step, isPending }) {
   const [isSubmitting, setIsSubmitting] = useState();
   return (
     <footer
@@ -99,10 +99,9 @@ function FormFooter({ step, isPending }) {
       {step !== 1 && (
         <NavButton
           name="back"
-          step={step}
           isPending={isPending}
           isSubmitting={isSubmitting}
-          setIsSubmitting={setIsSubmitting}
+          setIsSubmitting={() => setIsSubmitting("back")}
         >
           Back
         </NavButton>
@@ -110,10 +109,9 @@ function FormFooter({ step, isPending }) {
       {step === 3 ? (
         <NavButton
           name="purchase"
-          step={step}
           isPending={isPending}
           isSubmitting={isSubmitting}
-          setIsSubmitting={setIsSubmitting}
+          setIsSubmitting={() => setIsSubmitting("purchase")}
           icon
         >
           Purchase
@@ -124,7 +122,7 @@ function FormFooter({ step, isPending }) {
           step={step}
           isPending={isPending}
           isSubmitting={isSubmitting}
-          setIsSubmitting={setIsSubmitting}
+          setIsSubmitting={() => setIsSubmitting("next")}
         >
           Next
         </NavButton>
@@ -147,9 +145,9 @@ function NavButton({
       type="submit"
       disabled={isPending}
       onClick={(e) => setIsSubmitting(e.target.name)}
-      className="button button-primary button-size-base grid grid-cols-3 gap-2"
+      className="group button button-primary button-size-base grid grid-cols-3 gap-2"
     >
-      {icon ? (
+      {icon && !isPending ? (
         <PiLockBold
           size="20"
           className={
@@ -162,7 +160,7 @@ function NavButton({
         <CgSpinner
           size="24"
           className={`loaderIcon justify-self-end self-center opacity-0 ${
-            isPending && isSubmitting === name && "opacity-100"
+            isSubmitting === name && "group-disabled:opacity-100"
           }`}
         />
       )}
