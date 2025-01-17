@@ -1,5 +1,6 @@
 "use server";
 // FUNCTIONS
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import {
   putReservation,
@@ -14,6 +15,7 @@ import { Processing } from "@/lib/utils";
 // ORDER COMPLETION
 export async function completeOrder() {
   await deleteUnpaid();
+  await Processing(3000);
   return { success: true };
 }
 
@@ -36,8 +38,7 @@ export async function submitOrder(prev, formData) {
   // BOOKING FLOW || STEP THREE
   if (prev.step === 3) {
     const stepThree = await submitStepThree(prev, formData);
-    revalidatePath("/");
-    return { success: false, ...stepThree };
+    return { success: true, ...stepThree };
   }
 }
 
@@ -353,11 +354,10 @@ export async function submitStepThree(prev, formData) {
   // FULLFIL RESERVATION
   const id = { id: orderData.reservation_id };
   const response = await postReservation(id);
+  await Processing(600);
   if (response.status) {
-    await Processing(1000);
     return { success: false };
   } else {
-    await Processing(2000);
     return { succes: true };
   }
 }

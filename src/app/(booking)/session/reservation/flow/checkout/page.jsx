@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 
 // FUNCTIONS || REACT
-import { useActionState, startTransition } from "react";
+import { useActionState, startTransition, useEffect } from "react";
 
 // COMPONENTS
 import Form from "next/form";
@@ -35,7 +35,6 @@ import { keyEnter } from "@/lib/utils";
 export default function Page() {
   // FORM ACTION
   const initState = { step: 1, success: false, errors: {} };
-
   const [state, submit, isPending] = useActionState(submitOrder, initState);
   const [order, complete, processingOrder] = useActionState(completeOrder, {
     success: false,
@@ -56,18 +55,23 @@ export default function Page() {
     }
     if (handler === "purchase") {
       startTransition(() => submit(formData));
-      startTransition(() => complete(formData));
     }
   }
 
   // SUBMISSION REDIRECT
-  if (order?.success === true) {
+  useEffect(() => {
+    if (state?.success) {
+      startTransition(() => complete());
+    }
+  }, [state]);
+
+  if (order?.success) {
     redirect("/session/reservation/success");
   }
 
   return (
     <main className="mb-6">
-      {(processingOrder || order?.success) && <ProcessingOrder />}
+      {processingOrder && <ProcessingOrder />}
       <Form
         onSubmit={handleSubmit}
         onKeyDown={keyEnter}
